@@ -7,5 +7,5 @@ Comment=create .git/ in current directory
 #    %N: This represents the filename without the path, useful for commit messages.
 Exec=bash -c "cd %P && git init"
 Icon-Name=git-init
-Selection=s
-Extensions=any
+Selection=any
+Extensions=dir
