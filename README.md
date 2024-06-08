@@ -1,6 +1,6 @@
 # nemo-git-integration
 
-use git commands from nemo file explorer
+Use git commands from nemo file explorer
 
 Nemo is the official file manager of the Cinnamon desktop environment. 
 
@@ -82,4 +82,14 @@ make uninstall
 
 ![image](https://github.com/wilsonify/nemo-git-integration/assets/26659886/f0c17b0f-f2c7-4d94-9cb0-0abc031782e5)
 
+# How to Contribute
 
+Contributions are welcome! If you want to contribute to this project, follow these steps:
+
+1. Open an Issue so that it can be discussed in the open.
+2. Fork this repository.
+3. Create a new branch for your feature
+4. Make your changes
+5. commit them
+6. Push them
+7. Submit a pull request from your remote into my remote
