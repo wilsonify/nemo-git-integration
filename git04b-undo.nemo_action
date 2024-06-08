@@ -1,5 +1,5 @@
 [Nemo Action]
-Name=Git Reset
+Name=Git Undo
 Comment=Undo changes
 #Explanation
 #    %P: This placeholder represents the full path to the directory containing the selected file or folder. This ensures that the command navigates to the correct directory before executing the Git command.
