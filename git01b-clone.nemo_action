@@ -1,0 +1,11 @@
+[Nemo Action]
+Name=Git Clone
+Comment=Clone a git repository into the current directory
+#Explanation
+#    %P: This placeholder represents the full path to the directory containing the selected file or folder. This ensures that the command navigates to the correct directory before executing the Git command.
+#    %N: This represents the filename without the path, useful for commit messages.
+
+Exec=sh -c "REPO_URL=$(zenity --entry --text 'Enter repository URL to clone' --title 'Git Clone') && if [ -n \"$REPO_URL\" ]; then cd %P && git clone \"$REPO_URL\"; fi"
+Icon-Name=git-clone
+Selection=any
+Extensions=dir
