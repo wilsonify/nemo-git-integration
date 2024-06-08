@@ -105,13 +105,21 @@ Contributions are welcome! If you want to contribute to this project, follow the
 ## valid Selection(s)
 
 s: Action is available when only one item is selected.
+
 m: Action is available when multiple items are selected.
+
 a: Action is available when one or more items are selected.
+
 f: Action is available when files are selected.
+
 d: Action is available when directories are selected.
 
 You can combine these values to create more specific conditions. For example:
+
 sm: Action is available when multiple items are selected and one of them is a folder.
+
 af: Action is available when one or more files are selected.
+
 ad: Action is available when one or more directories are selected.
+
 adf: Action is available when one or more directories or files are selected.
