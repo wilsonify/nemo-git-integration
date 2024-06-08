@@ -1,6 +1,6 @@
 [Nemo Action]
-Name=Git Unstage
-Comment=Unstage file
+Name=Git UnAdd
+Comment=UnAdd file
 #Explanation
 #    %P: This placeholder represents the full path to the directory containing the selected file or folder. This ensures that the command navigates to the correct directory before executing the Git command.
 #    %F: This represents the full path to the selected file.
