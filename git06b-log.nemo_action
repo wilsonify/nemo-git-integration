@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Git Log
+Comment=Display the git log
+Exec=gnome-terminal -- bash -c "cd %P && git log; read -p 'Press Enter to close...'"
+Icon-Name=git-log
+Selection=any
+Extensions=dir
