@@ -6,7 +6,7 @@ Comment=Pull updates from the remote repository
 #    %F: This represents the full path to the selected file.
 #    %N: This represents the filename without the path, useful for commit messages.
 
-Exec=bash -c "cd %P && git pull"
+Exec=bash -c "cd %P && fetch && git stash && git pull --rebase && git stash pop"
 Icon-Name=git-pull
 Selection=any
 Extensions=dir
