@@ -1,10 +1,6 @@
 [Nemo Action]
 Name=Git UnAdd
 Comment=UnAdd file
-#Explanation
-#    %P: This placeholder represents the full path to the directory containing the selected file or folder. This ensures that the command navigates to the correct directory before executing the Git command.
-#    %F: This represents the full path to the selected file.
-#    %N: This represents the filename without the path, useful for commit messages.
 Exec=bash -c "cd %P && git restore --staged %F"
 Icon-Name=git-restore
 Selection=s
