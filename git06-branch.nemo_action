@@ -1,0 +1,11 @@
+[Nemo Action]
+Name=Git Create Branch
+Comment=Create a new git branch
+#Explanation
+#    %P: This placeholder represents the full path to the directory containing the selected file or folder. This ensures that the command navigates to the correct directory before executing the Git command.
+
+Exec=sh -c "BRANCH_NAME=$(zenity --entry --text 'Enter the new branch name' --title 'Git Create Branch') && if [ -n \"$BRANCH_NAME\" ]; then cd %P && git branch \"$BRANCH_NAME\"; fi"
+Icon-Name=git-branch
+Selection=any
+Extensions=dir
+Conditions=filename .git;
