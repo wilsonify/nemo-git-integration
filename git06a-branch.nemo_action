@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=Git Create/Switch Branch
+Comment=Create a new git branch or switch to an existing one
+Exec=bash -c '~/.local/share/nemo/actions/git06a-branch.sh %P'
+Icon-Name=git-branch
+Selection=any
+Extensions=dir
+Conditions=filename .git;
