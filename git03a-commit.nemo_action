@@ -3,5 +3,5 @@ Name=Git Commit
 Comment=Commit file with a message
 Exec= bash -c "cd %P && git commit -m 'modified %N' %F"
 Icon-Name=git-commit
-Selection=s
+Selection=notnone
 Extensions=any
