@@ -3,3 +3,4 @@
 for FILE in "$@"; do
   git commit -m "modified $(basename "$FILE")"
 done
+
