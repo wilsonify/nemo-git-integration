@@ -26,7 +26,9 @@ if [ -n "$BRANCH_NAME" ]; then
     # If the user chose to create a new branch
     if [ "$BRANCH_NAME" = "[New Branch]" ]; then
         BRANCH_NAME=$(zenity --entry --text "Enter the new branch name" --title "Git Create Branch")
+        git checkout -b "$BRANCH_NAME"
+    else
+      git checkout "$BRANCH_NAME"
     fi
-    # switch branch
-    git checkout -b "$BRANCH_NAME"
+
 fi
