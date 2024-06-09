@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Git status
+Comment=Display the git status
+Exec=sh -c "cd %P && git status | zenity --text-info --width=800 --height=600 --title='Git Status'"
+Icon-Name=git-status
+Selection=any
+Extensions=dir
