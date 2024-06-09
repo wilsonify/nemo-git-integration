@@ -6,7 +6,7 @@ Comment=Push commits to the remote repository
 #    %F: This represents the full path to the selected file.
 #    %N: This represents the filename without the path, useful for commit messages.
 
-Exec=bash -c "cd %P && git push"
+Exec=bash -c "cd %P && git push || git push --set-upstream"
 Icon-Name=git-push
 Selection=any
 Extensions=dir
