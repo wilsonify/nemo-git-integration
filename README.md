@@ -123,3 +123,11 @@ af: Action is available when one or more files are selected.
 ad: Action is available when one or more directories are selected.
 
 adf: Action is available when one or more directories or files are selected.
+
+
+## Run Nemo in Debug Mode
+
+see nemo --help for more details
+```
+NEMO_DEBUG=Actions,Window nemo --debug
+```
