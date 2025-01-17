@@ -116,8 +116,6 @@ d: Action is available when directories are selected.
 
 You can combine these values to create more specific conditions. For example:
 
-sm: Action is available when multiple items are selected and one of them is a folder.
-
 af: Action is available when one or more files are selected.
 
 ad: Action is available when one or more directories are selected.
