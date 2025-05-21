@@ -133,6 +133,15 @@ ad: Action is available when one or more directories are selected.
 
 adf: Action is available when one or more directories or files are selected.
 
+# Explanation
+
+"$1" is the path to the current directory (%P in .nemo_action).
+
+"$@" handles the selected files (%F in .nemo_action).
+
+Uses zenity --question to confirm reset, which is destructive.
+
+Aggregates errors to show at the end if anything failed.
 
 ## Run Nemo in Debug Mode
 
