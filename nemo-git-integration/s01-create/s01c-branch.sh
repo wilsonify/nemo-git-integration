@@ -3,6 +3,7 @@
 
 # Navigate to the given directory
 cd "$1"
+PREV_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # Get the branch name
 BRANCH_NAME=$(
@@ -27,8 +28,15 @@ if [ -n "$BRANCH_NAME" ]; then
     if [ "$BRANCH_NAME" = "[New Branch]" ]; then
         BRANCH_NAME=$(zenity --entry --text "Enter the new branch name" --title "Git Create Branch")
         git checkout -b "$BRANCH_NAME"
+        echo "$PREV_BRANCH" > ~/.cache/nemo_git_prev_branch
+        echo "$BRANCH_NAME" > ~/.cache/nemo_git_current_branch
+
     else
       git checkout "$BRANCH_NAME"
+      echo "$PREV_BRANCH" > ~/.cache/nemo_git_prev_branch
+      echo "$BRANCH_NAME" > ~/.cache/nemo_git_current_branch
     fi
 
+
 fi
+
