@@ -1,6 +1,6 @@
 [Nemo Action]
 Name=Git UnAdd
-Comment=UnAdd file
+Comment=remove .git folder
 Exec=~/.local/share/nemo-git-integration/s04-delete/s04b-uninit.sh "%P"
 Icon-Name=git-restore
 Selection=s
