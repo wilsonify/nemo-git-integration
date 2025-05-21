@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Git UnAdd
+Comment=UnAdd file
+Exec=bash -c "cd %P && git restore --staged %F"
+Icon-Name=git-restore
+Selection=s
+Extensions=any

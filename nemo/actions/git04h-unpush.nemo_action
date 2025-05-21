@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Git UnCommit
+Comment=Undo the last commit but keeps the changes staged.
+Exec=bash -c "cd %P && git reset --soft HEAD~1"
+Icon-Name=git-uncommit
+Selection=s
+Extensions=any
