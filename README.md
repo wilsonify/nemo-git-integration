@@ -1,17 +1,18 @@
-# nemo-git-integration
+nemo-git-integration
+=====
 
-Use git commands from nemo file explorer
+Integrate Git directly into the Nemo file explorer using context menus.
 
-Nemo is the official file manager of the Cinnamon desktop environment. 
+This project brings Git functionality into Nemo, the file manager used in the Cinnamon (a GNOME Files fork, formerly Nautilus) desktop environment. 
 
-Cinnamon is a fork of GNOME Files (formerly Nautilus).
+It lets you perform common Git operations via right-click, without opening a terminal or IDE.
 
 
 # Get Started 
 
 ```
-make install
-make uninstall
+make install    # Copies *.nemo_action files to the ~/.local/share/nemo/actions folder
+make uninstall  # Removes installed actions
 ```
 
 1. use debian as your operating system. probably works with red hat but it is not tested.  
@@ -28,6 +29,10 @@ make uninstall
 
 # Usage
 
+Each action is accessed by right-clicking files or folders in Nemo.
+
+## 1. Create
+
 1a. **Initialize a Directory into a Repository**
    
    - Right-click on a folder and select "Git Initialize" from the context menu.
@@ -39,6 +44,7 @@ make uninstall
    - A dialog will pop up prompting you to specify the URL of the repository you want to clone.
    - After entering the URL, the repository will be cloned into the selected folder, similar to running `git clone <url>` from the command line.
 
+## 2. Read
 2a. **Add a File to the Working Tree**
    
    - To add a file to the working tree, simply right-click on the file you want to add and select "Git Add" from the context menu.
@@ -49,6 +55,7 @@ make uninstall
    - To remove a file from the working tree, right-click on the file you want to remove and select "Git Remove" from the context menu.
    - This action removes the selected file from both the working directory and the staging area, similar to running `git rm <file>` from the command line.
 
+# 3. Update
 3a. **Commit a Change to a File**
    
    - To commit a change to a file, right-click on the file you've modified and select "Git Commit" from the context menu.
@@ -58,6 +65,8 @@ make uninstall
    
    - To uncommit a change to a file, right-click on the file and select "Git Undo Commit" from the context menu.
    - This action undoes the last commit that affected the selected file, effectively reverting the changes made in that commit, similar to running `git reset HEAD <file>` from the command line.
+
+# 4. Delete
 
 4a. **Push Changes to the Remote Named Origin**
    
@@ -94,7 +103,9 @@ Contributions are welcome! If you want to contribute to this project, follow the
 6. Push them
 7. Submit a pull request from your remote into my remote
 
-# Some useful nemo_action stuff to help understand the code
+# Action Syntax Cheatsheet
+
+Some useful nemo_action stuff to help understand the code
 
 %P: This placeholder represents the full path to the directory containing the selected file or folder. This ensures that the command navigates to the correct directory before executing the Git command.
 
