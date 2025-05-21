@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git Clone
 Comment=Clone a git repository into the current directory
-Exec=/usr/local/bin/nemo-git-clone.sh "%P"
+Exec=~/.local/share/nemo-git-integration/s01-create/s01b-clone.sh "%P"
 Icon-Name=git-clone
 Selection=any
 Extensions=dir
