@@ -1,0 +1,1 @@
+cd %P && git restore --staged %F

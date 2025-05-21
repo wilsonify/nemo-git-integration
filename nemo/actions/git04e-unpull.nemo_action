@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git UnAdd
 Comment=UnAdd file
-Exec=bash -c "cd %P && git restore --staged %F"
+Exec=~/.local/share/nemo-git-integration/s04-delete/s04e-unpull.sh "%P"
 Icon-Name=git-restore
 Selection=s
 Extensions=any

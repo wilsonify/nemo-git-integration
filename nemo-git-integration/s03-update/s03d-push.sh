@@ -1,0 +1,1 @@
+cd %P && git push || git push --set-upstream

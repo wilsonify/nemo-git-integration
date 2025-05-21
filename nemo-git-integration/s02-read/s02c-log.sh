@@ -1,0 +1,1 @@
+cd %P && git log --graph --decorate --oneline --simplify-by-decoration | zenity --text-info --width=800 --height=600 --title='Git Log'

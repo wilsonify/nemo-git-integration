@@ -1,0 +1,1 @@
+cd %P && git add %F

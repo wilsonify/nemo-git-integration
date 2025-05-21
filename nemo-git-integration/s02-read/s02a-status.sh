@@ -1,0 +1,1 @@
+cd %P && git status | zenity --text-info --width=500 --height=300 --title='Git Status'

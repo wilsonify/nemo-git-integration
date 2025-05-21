@@ -1,0 +1,1 @@
+cd %P && git fetch && git stash && git pull --rebase && git stash pop
