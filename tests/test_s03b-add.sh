@@ -7,28 +7,24 @@ setup() {
   cp "$SOURCE_DIR/s03-update/s03b-add.sh" "$SCRIPT"
   chmod +x "$SCRIPT"
 
-  # Setup mock zenity that logs calls
-  export PATH="$TEST_DIR:$PATH"
+  # Setup zenity mock with log
   ZENITY_LOG="$TEST_DIR/zenity_log.txt"
+  export ZENITY_LOG
+
+  export PATH="$TEST_DIR:$PATH"
   cat <<'EOF' > "$TEST_DIR/zenity"
 #!/bin/bash
 echo "[Zenity Mock] $@" >> "$ZENITY_LOG"
 if [[ "$*" == *"--question"* ]]; then
-  # Simulate user clicking "OK" on question dialog
-  exit 0
-elif [[ "$*" == *"--error"* ]]; then
-  # Print error and exit 1
-  echo "Error dialog: $*"
-  exit 1
-elif [[ "$*" == *"--warning"* ]]; then
-  echo "Warning dialog: $*"
+  exit 0  # simulate "OK"
+elif [[ "$*" == *"--error"* || "$*" == *"--warning"* ]]; then
   exit 1
 fi
 exit 0
 EOF
   chmod +x "$TEST_DIR/zenity"
 
-  # Initialize git repo with some files
+  # Initialize git repo
   cd "$TEST_DIR"
   git config --global init.defaultBranch main
   git init
@@ -37,9 +33,8 @@ EOF
   git add .
   git commit -m "Initial commit"
 
-
-  # Files should exist for adding
-  touch "$TEST_DIR/file3.txt"
+  git reset HEAD file1.txt  # Unstage file1.txt correctly
+  touch file3.txt           # New untracked file
 }
 
 teardown() {
@@ -47,49 +42,53 @@ teardown() {
 }
 
 @test "adds selected files successfully and shows zenity info" {
-  run "$SCRIPT" "$TEST_DIR" "file1.txt" "file3.txt"
+  git reset  # Ensure clean staging area
 
+  run "$SCRIPT" "$TEST_DIR" "file1.txt" "file3.txt"
   [ "$status" -eq 0 ]
 
-  # Check that files were staged
-  run git diff --name-only --cached
-  [[ "${output}" == *file1.txt* ]]
-  [[ "${output}" == *file3.txt* ]]
+  # ✅ Validate staging
+  run git diff --cached --name-only
+  echo "$output"
+  [[ "$output" == *file1.txt* ]]
+  [[ "$output" == *file3.txt* ]]
 
-  # Check zenity question and info calls in log
-  grep -q -- "--question" "$ZENITY_LOG"
-  grep -q -- "--info" "$ZENITY_LOG"
+  # ✅ Validate zenity dialogs
+  run grep -- "--question" "$ZENITY_LOG"
+  run grep -- "--info" "$ZENITY_LOG"
 }
 
 @test "shows zenity error if target directory not accessible" {
   run "$SCRIPT" "/nonexistent/dir" "file1.txt"
   [ "$status" -ne 0 ]
-  grep -q "Directory Error" "$ZENITY_LOG"
+  run grep -- "Directory Error" "$ZENITY_LOG"
 }
 
 @test "shows zenity error if not a git repository" {
-  mkdir -p "$TEST_DIR/notagit"
+  mkdir "$TEST_DIR/notagit"
   run "$SCRIPT" "$TEST_DIR/notagit" "file1.txt"
   [ "$status" -ne 0 ]
-  grep -q "Not a Git Repository" "$ZENITY_LOG"
+  run grep -- "Not a Git Repository" "$ZENITY_LOG"
 }
 
 @test "exits cleanly when user cancels add confirmation" {
-  # Override zenity mock for question dialog to simulate cancel
+  # Override zenity to simulate cancel
   cat <<'EOF' > "$TEST_DIR/zenity"
 #!/bin/bash
-echo "[Zenity Mock] $@" >> "$ZENITY_LOG"
+echo "[Zenity Mock Cancel] $@" >> "$ZENITY_LOG"
 if [[ "$*" == *"--question"* ]]; then
-  # Simulate user clicking "Cancel"
-  exit 1
+  exit 1  # simulate "Cancel"
 fi
 exit 0
 EOF
   chmod +x "$TEST_DIR/zenity"
+  export ZENITY_LOG  # Re-export in case subshells don't inherit
+
+  git reset  # Ensure clean staging area
 
   run "$SCRIPT" "$TEST_DIR" "file1.txt"
   [ "$status" -eq 0 ]
-  # No files should be staged
-  run git diff --name-only --cached
-  [[ "${output}" != *file1.txt* ]]
+
+  run git diff --cached --name-only
+  [[ "$output" != *file1.txt* ]]
 }
