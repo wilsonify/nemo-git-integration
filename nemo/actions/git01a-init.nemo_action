@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git Initialize
 Comment=create .git/ in current directory
-Exec=bash -c "cd %P && git init"
+Exec=/usr/local/bin/nemo-git-integration/s01-create/s01a-init.sh "%P"
 Icon-Name=git-init
 Selection=any
 Extensions=dir
