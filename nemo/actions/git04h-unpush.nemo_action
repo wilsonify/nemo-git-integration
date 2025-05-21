@@ -1,6 +1,6 @@
 [Nemo Action]
 Name=Git UnCommit
-Comment=Undo the last commit but keeps the changes staged.
+Comment=Force Push as if you had not pushed last change to the remote.
 Exec=~/.local/share/nemo-git-integration/s04-delete/s04h-unpush.sh "%P"
 Icon-Name=git-uncommit
 Selection=s
