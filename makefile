@@ -22,4 +22,4 @@ dev:
 	cd ~/repos/github.com/bats-core && sudo ./install.sh /usr/local
 
 test:
-	cd tests && bats test_init.bats
+	bats tests/*
