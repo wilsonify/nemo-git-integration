@@ -16,3 +16,10 @@ uninstall:
 	@for file in $(wildcard nemo-git-integration/s03-update/*); do echo "removing $(basename $$file)"; rm -f "$(HOME)/.local/share/nemo-git-integration/s03-update/$$(basename $$file)"; done
 	@for file in $(wildcard nemo-git-integration/s04-delete/*); do echo "removing $(basename $$file)"; rm -f "$(HOME)/.local/share/nemo-git-integration/s04-delete/$$(basename $$file)"; done
 	@echo "Done."
+
+dev:
+	git clone https://github.com/bats-core/bats-core.git ~/repos/github.com/bats-core
+	cd ~/repos/github.com/bats-core && sudo ./install.sh /usr/local
+
+test:
+	cd tests && bats test_init.bats
