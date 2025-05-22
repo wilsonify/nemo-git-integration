@@ -5,7 +5,9 @@ prereq:
 	sudo apt update && sudo apt install -y zenity git
 
 install:
-	cp -r . ~/.local/share
+	cp -r ./icons ~/.local/share
+	cp -r ./nemo ~/.local/share
+	cp -r ./nemo-git-integration ~/.local/share
 
 uninstall:
 	@echo "Removing installed files"
