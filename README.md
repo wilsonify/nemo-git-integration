@@ -10,6 +10,8 @@ It lets you perform common Git operations via right-click, without opening a ter
 
 # Get Started 
 
+Ensure you're running **Debian** with **Cinnamon** as your window manager and **Nemo** as your file explorer.
+
 ```
 make install    # Copies *.nemo_action files to the ~/.local/share/nemo/actions folder
 make uninstall  # Removes installed actions
@@ -31,63 +33,53 @@ make uninstall  # Removes installed actions
 
 Each action is accessed by right-clicking files or folders in Nemo.
 
-## 1. Create
 
-1a. **Initialize a Directory into a Repository**
-   
-   - Right-click on a folder and select "Git Initialize" from the context menu.
-   - This action initializes the selected directory as a Git repository by creating a `.git` folder inside it, similar to running `git init` from the command line.
+## Project Structure
 
-1b. **Clone an Existing Git Repository**
-   
-   - Right-click on a folder and select "Git Clone" from the context menu.
-   - A dialog will pop up prompting you to specify the URL of the repository you want to clone.
-   - After entering the URL, the repository will be cloned into the selected folder, similar to running `git clone <url>` from the command line.
+```
+.
+├── icons/                 # PNG icons and README for visual enhancements
+├── nemo/                 # Contains .nemo_action files for context menu integration
+│   └── actions/          # Each file corresponds to a specific Git operation
+├── nemo-git-integration/ # Backing scripts grouped by CRUD-like categories
+│   ├── s01-create/       # Scripts for repo creation (init, clone, branch)
+│   ├── s02-read/         # Scripts for reading repo state (status, log, fetch)
+│   ├── s03-update/       # Scripts for updating (pull, add, commit, push)
+│   └── s04-delete/       # Scripts for undoing changes (reset, uninit, etc.)
+├── tests/                # Bats-compatible test scripts for integration logic
+├── makefile              # Install/uninstall .nemo_action files
+├── LICENSE               # Licensing information
+└── README.md             # This documentation
+```
 
-## 2. Read
-2a. **Add a File to the Working Tree**
-   
-   - To add a file to the working tree, simply right-click on the file you want to add and select "Git Add" from the context menu.
-   - This action stages the selected file for the next commit, similar to running `git add <file>` from the command line.
+## Features
 
-2b. **Remove a File from the Working Tree**
-   
-   - To remove a file from the working tree, right-click on the file you want to remove and select "Git Remove" from the context menu.
-   - This action removes the selected file from both the working directory and the staging area, similar to running `git rm <file>` from the command line.
+### 1. Create
 
-# 3. Update
-3a. **Commit a Change to a File**
-   
-   - To commit a change to a file, right-click on the file you've modified and select "Git Commit" from the context menu.
-   - This action opens a dialog where you can enter a commit message for the change. Once you've entered the message and confirmed, the change will be committed to the repository, similar to running `git commit -m "<message>" <file>` from the command line.
+- **Git Init:** Initialize a folder as a Git repository.
+- **Git Clone:** Clone a remote Git repository.
+- **Git Branch:** Create and switch to a new branch.
 
-3b. **Uncommit a Change to a File**
-   
-   - To uncommit a change to a file, right-click on the file and select "Git Undo Commit" from the context menu.
-   - This action undoes the last commit that affected the selected file, effectively reverting the changes made in that commit, similar to running `git reset HEAD <file>` from the command line.
+### 2. Read
 
-# 4. Delete
+- **Git Status:** Show the working tree state.
+- **Git Log:** View recent commits.
+- **Git Fetch:** Sync from remote without merging.
 
-4a. **Push Changes to the Remote Named Origin**
-   
-   - To push changes to the remote repository named "origin", right-click on the folder containing the changes and select "Git Push" from the context menu.
-   - This action pushes the committed changes from the local repository to the remote repository, similar to running `git push origin <branch>` from the command line.
+### 3. Update
 
-4b. **Undo Changes to Match the HEAD of the Current Branch**
-   
-   - To undo changes to match the HEAD of the current branch, right-click on the folder containing the changes and select "Git Undo Changes" from the context menu.
-   - This action discards all local changes and reverts the working directory to match the last commit on the current branch, similar to running `git reset --hard HEAD` from the command line.
+- **Git Pull:** Merge remote changes into local branch.
+- **Git Add:** Stage selected files.
+- **Git Commit:** Commit staged changes.
+- **Git Push:** Push changes to remote.
 
-5a. **Fetch Information About Remote Changes**
-   
-   - To fetch information about remote changes, right-click on the folder containing the repository and select "Git Fetch" from the context menu.
-   - This action retrieves information about changes from the remote repository without merging them into the local branch, similar to running `git fetch` from the command line.
+### 4. Delete/Undo
 
-5b. **Pull Remote Changes into Your Local Copy**
-   
-   - To pull remote changes into your local copy, right-click on the folder containing the repository and select "Git Pull" from the context menu.
-   - This action fetches changes from the remote repository and merges them into the current branch, updating your local copy with the latest changes, similar to running `git pull` from the command line.
-
+- **Git Reset:** Undo changes in working directory.
+- **Git Uninit:** Remove .git directory.
+- **Git Unclone:** Delete cloned repo.
+- **Git Unbranch:** Delete local branch.
+- **Git Unpull/Unadd/Uncommit/Unpush:** Roll back operations.
 
 ![image](https://github.com/wilsonify/nemo-git-integration/assets/26659886/f0c17b0f-f2c7-4d94-9cb0-0abc031782e5)
 
@@ -102,6 +94,16 @@ Contributions are welcome! If you want to contribute to this project, follow the
 5. commit them
 6. Push them
 7. Submit a pull request from your remote into my remote
+
+## Testing
+
+Scripts under `tests/` use [Bats](https://github.com/bats-core/bats-core) for shell testing. Each test corresponds to a script under `nemo-git-integration/`.
+
+```bash
+make dev # installs bats
+make test # bats tests/*
+```
+
 
 # Action Syntax Cheatsheet
 
