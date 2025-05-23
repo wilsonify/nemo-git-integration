@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git Fetch
 Comment=Fetch updates from the remote repository
-Exec=~/.local/share/nemo-git-integration/s02-read/s02d-fetch.sh "%P"
+Exec=/home/thom/.local/share/nemo-git-integration/s02-read/s02d-fetch.sh "%P"
 Icon-Name=git-fetch
 Selection=any
 Extensions=dir

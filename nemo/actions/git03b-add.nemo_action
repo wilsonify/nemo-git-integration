@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git Add
 Comment=Add file to the staging area
-Exec=~/.local/share/nemo-git-integration/s03-update/s03b-add.sh "%P"
+Exec=/home/thom/.local/share/nemo-git-integration/s03-update/s03b-add.sh "%P"
 Icon-Name=git-add
 Selection=s
 Extensions=any

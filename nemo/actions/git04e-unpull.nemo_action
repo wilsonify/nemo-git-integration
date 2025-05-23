@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git UnAdd
 Comment=reset as if you had not pulled updates from the remote repository
-Exec=~/.local/share/nemo-git-integration/s04-delete/s04e-unpull.sh "%P"
+Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04e-unpull.sh "%P"
 Icon-Name=git-restore
 Selection=s
 Extensions=any

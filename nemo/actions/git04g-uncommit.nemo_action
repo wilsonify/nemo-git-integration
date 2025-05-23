@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git UnCommit
 Comment=Undo the last commit but keeps the changes staged.
-Exec=~/.local/share/nemo-git-integration/s04-delete/s04g-uncommit.sh "%P"
+Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04g-uncommit.sh "%P"
 Icon-Name=git-uncommit
 Selection=s
 Extensions=any
