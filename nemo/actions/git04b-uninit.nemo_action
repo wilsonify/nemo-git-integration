@@ -2,6 +2,5 @@
 Name=Git UnAdd
 Comment=remove .git folder
 Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04b-uninit.sh "%P"
-Icon-Name=git-restore
 Selection=s
 Extensions=any

@@ -2,6 +2,5 @@
 Name=Git Undo
 Comment=Undo changes
 Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04a-reset.sh "%P" "%F"
-Icon-Name=git-reset
 Selection=s
 Extensions=any

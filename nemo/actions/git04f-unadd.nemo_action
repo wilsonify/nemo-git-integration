@@ -2,6 +2,5 @@
 Name=Git UnAdd
 Comment=UnAdd file
 Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04f-unadd.sh "%P"
-Icon-Name=git-restore
 Selection=s
 Extensions=any

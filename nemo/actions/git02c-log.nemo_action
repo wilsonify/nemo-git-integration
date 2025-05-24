@@ -2,6 +2,5 @@
 Name=Git Log
 Comment=Display the git log
 Exec=/home/thom/.local/share/nemo-git-integration/s02-read/s02c-log.sh "%P"
-Icon-Name=git-log
 Selection=any
 Extensions=dir

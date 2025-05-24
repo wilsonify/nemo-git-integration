@@ -2,6 +2,5 @@
 Name=Git Initialize
 Comment=create .git/ in current directory
 Exec=/home/thom/.local/share/nemo-git-integration/s01-create/s01a-init.sh "%P"
-Icon-Name=git-init
 Selection=any
 Extensions=dir

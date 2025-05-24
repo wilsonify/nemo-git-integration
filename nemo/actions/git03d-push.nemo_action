@@ -2,7 +2,6 @@
 Name=Git Push
 Comment=Push commits to the remote repository
 Exec=/home/thom/.local/share/nemo-git-integration/s03-update/s03d-push.sh "%P"
-Icon-Name=git-push
 Selection=any
 Extensions=dir
 Conditions=filename .git;
