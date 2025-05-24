@@ -1,5 +1,5 @@
 [Nemo Action]
-Name=Git UnAdd
+Name=Git UnPull
 Comment=reset as if you had not pulled updates from the remote repository
 Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04e-unpull.sh "%P"
 Selection=s
