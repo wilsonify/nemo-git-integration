@@ -1,6 +1,6 @@
 [Nemo Action]
 Name=Git UnInit
 Comment=remove .git folder
-Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04b-uninit.sh "%P"
+Exec=__HOME__/.local/share/nemo-git-integration/s04-delete/s04b-uninit.sh "%P"
 Selection=s
 Extensions=any

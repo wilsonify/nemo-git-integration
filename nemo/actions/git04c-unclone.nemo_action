@@ -1,6 +1,6 @@
 [Nemo Action]
 Name=Git UnClone
 Comment=Safely Un-clone a git repository in the current directory
-Exec=/home/thom/.local/share/nemo-git-integration/s04-delete/s04c-unclone.sh "%P"
+Exec=__HOME__/.local/share/nemo-git-integration/s04-delete/s04c-unclone.sh "%P"
 Selection=s
 Extensions=any

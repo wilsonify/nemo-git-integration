@@ -1,6 +1,6 @@
 [Nemo Action]
 Name=Git Status
 Comment=Display the git status
-Exec=/home/thom/.local/share/nemo-git-integration/s02-read/s02a-status.sh "%P"
+Exec=__HOME__/.local/share/nemo-git-integration/s02-read/s02a-status.sh "%P"
 Selection=any
 Extensions=dir

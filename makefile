@@ -8,6 +8,9 @@ install:
 	cp -r ./icons ~/.local/share
 	cp -r ./nemo ~/.local/share
 	cp -r ./nemo-git-integration ~/.local/share
+	# Replace __HOME__ with the explicit path in all .nemo_action files
+	find $(HOME)/.local/share/nemo -type f -name "*.nemo_action" -exec sed -i "s|__HOME__|$(HOME)|g" {} \;
+
 
 uninstall:
 	@echo "Removing installed files"

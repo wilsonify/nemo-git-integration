@@ -1,7 +1,7 @@
 [Nemo Action]
 Name=Git Pull
 Comment=Pull updates from the remote repository
-Exec=/home/thom/.local/share/nemo-git-integration/s03-update/s03a-pull.sh "%P"
+Exec=__HOME__/.local/share/nemo-git-integration/s03-update/s03a-pull.sh "%P"
 Selection=any
 Extensions=dir
 Conditions=filename .git;

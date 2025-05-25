@@ -1,6 +1,6 @@
 [Nemo Action]
 Name=Git Commit
 Comment=Commit file with a message
-Exec=/home/thom/.local/share/nemo-git-integration/s03-update/s03c-commit.sh "%P" "%F"
+Exec=__HOME__/.local/share/nemo-git-integration/s03-update/s03c-commit.sh "%P" "%F"
 Selection=notnone
 Extensions=any

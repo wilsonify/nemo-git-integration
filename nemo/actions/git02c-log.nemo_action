@@ -1,6 +1,6 @@
 [Nemo Action]
 Name=Git Log
 Comment=Display the git log
-Exec=/home/thom/.local/share/nemo-git-integration/s02-read/s02c-log.sh "%P"
+Exec=__HOME__/.local/share/nemo-git-integration/s02-read/s02c-log.sh "%P"
 Selection=any
 Extensions=dir
