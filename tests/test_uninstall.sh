@@ -1,62 +1,57 @@
 #!/usr/bin/env bats
 
-# Path to scripts (adjust if in a different location)
-INSTALL_SCRIPT="./install.sh"
-UNINSTALL_SCRIPT="./uninstall.sh"
-
-# Temporary HOME for testing
 setup() {
-    TEST_HOME="$(mktemp -d)"
-    export HOME="$TEST_HOME"
+  export HOME="$(mktemp -d)"
+  mkdir -p "$HOME/.local/share/icons" "$HOME/.local/share/nemo/actions" "$HOME/.local/share/nemo-git-integration"
 
-    mkdir -p "$HOME/.local/share"
-    cp -r ./icons "$HOME/.local/share/"
-    cp -r ./nemo "$HOME/.local/share/"
-    cp -r ./nemo-git-integration "$HOME/.local/share/"
+  cp -r ./icons/* "$HOME/.local/share/icons/"
+  cp -r ./nemo/actions/* "$HOME/.local/share/nemo/actions/"
+  cp -r ./nemo-git-integration/* "$HOME/.local/share/nemo-git-integration/"
 
-    # Create a dummy actions-tree.json
-    mkdir -p "$HOME/.local/share/nemo"
-    echo '{"test":"data"}' > "$HOME/.local/share/nemo/actions-tree.json"
+  # Prepare a dummy backup file to simulate prior install
+  mkdir -p "$HOME/.config/nemo/actions"
+  echo '{"backup":"data"}' > "$HOME/.config/nemo/actions/actions-tree-bkup.json"
+  echo '{"modified":"data"}' > "$HOME/.config/nemo/actions/actions-tree.json"
+
+  cp ./install.sh ./uninstall.sh
+  chmod +x ./install.sh ./uninstall.sh
 }
 
 teardown() {
-    rm -rf "$TEST_HOME"
+  rm -rf "$HOME"
 }
 
-@test "uninstall.sh restores original actions-tree.json" {
-    run "$INSTALL_SCRIPT"
-    [ "$status" -eq 0 ]
-    [ -f "$HOME/.local/share/nemo/actions-tree-bkup.json" ]
+@test "uninstall.sh restores backup layout" {
+  run ./install.sh
+  [ "$status" -eq 0 ]
+  [ -f "$HOME/.config/nemo/actions/actions-tree-bkup.json" ]
 
-    # Modify actions-tree.json to simulate installation changes
-    echo '{"modified":"data"}' > "$HOME/.local/share/nemo/actions-tree.json"
+  # Overwrite layout to simulate change
+  echo '{"changed":true}' > "$HOME/.config/nemo/actions/actions-tree.json"
 
-    run "$UNINSTALL_SCRIPT"
-    [ "$status" -eq 0 ]
+  run ./uninstall.sh
+  [ "$status" -eq 0 ]
 
-    # After uninstall, backup should be restored
-    restored_content="$(<"$HOME/.local/share/nemo/actions-tree.json")"
-    backup_content="$(<"$HOME/.local/share/nemo/actions-tree-bkup.json")"
-    [ "$restored_content" = "$backup_content" ]
+  diff "$HOME/.config/nemo/actions/actions-tree.json" "$HOME/.config/nemo/actions/actions-tree-bkup.json"
 }
 
-@test "uninstall.sh removes icons, nemo actions, and integration dir" {
-    run "$INSTALL_SCRIPT"
-    [ "$status" -eq 0 ]
+@test "uninstall.sh removes installed files" {
+  run ./install.sh
+  [ "$status" -eq 0 ]
 
-    run "$UNINSTALL_SCRIPT"
-    [ "$status" -eq 0 ]
+  run ./uninstall.sh
+  [ "$status" -eq 0 ]
 
-    # Check that icons are removed
-    for file in ./icons/*; do
-        [ ! -f "$HOME/.local/share/icons/$(basename "$file")" ]
-    done
+  # Icons removed
+  for icon in ./icons/*; do
+    [ ! -f "$HOME/.local/share/icons/$(basename "$icon")" ]
+  done
 
-    # Check that nemo actions are removed
-    for file in ./nemo/actions/*; do
-        [ ! -f "$HOME/.local/share/nemo/actions/$(basename "$file")" ]
-    done
+  # Nemo actions removed
+  for action in ./nemo/actions/*; do
+    [ ! -f "$HOME/.local/share/nemo/actions/$(basename "$action")" ]
+  done
 
-    # Check that integration dir is gone
-    [ ! -d "$HOME/.local/share/nemo-git-integration" ]
+  # Git integration removed
+  [ ! -d "$HOME/.local/share/nemo-git-integration" ]
 }

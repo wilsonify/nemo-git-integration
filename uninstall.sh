@@ -1,70 +1,95 @@
 #!/usr/bin/env bash
 #
-# uninstall.sh — Undo install.sh changes for Nemo Git Integration
+# install.sh - Install Nemo Git Integration submenu
+#
+# Usage:
+#   ./install.sh          # Normal install
+#   ./install.sh uninstall # Uninstall and restore backup
+#   ./install.sh force    # Install, overwrite backup
 #
 set -euo pipefail
-IFS=$'\n\t'
-
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 HOME_DIR="${HOME}"
+ICONS_DIR="${HOME_DIR}/.local/share/icons"
+NEMO_ACTIONS_DIR="${HOME_DIR}/.local/share/nemo/actions"
 CONFIG_DIR="${HOME_DIR}/.config/nemo/actions"
-TARGET_ICONS_DIR="${HOME_DIR}/.local/share/icons"
-TARGET_NEMO_ACTIONS_DIR="${HOME_DIR}/.local/share/nemo/actions"
-GIT_INTEGRATION_DIR="${HOME_DIR}/.local/share/nemo-git-integration"
-
 LAYOUT_FILE="${CONFIG_DIR}/actions-tree.json"
 BACKUP_FILE="${CONFIG_DIR}/actions-tree-bkup.json"
+INTEGRATION_JSON="nemo-git-integration/actions-tree.json"
 
-log() { printf '[%s] %s\n' "$(date +'%Y-%m-%d %H:%M:%S')" "$*"; }
-warn() { printf '[%s] WARN: %s\n' "$(date +'%Y-%m-%d %H:%M:%S')" "$*" >&2; }
-fail() { log "ERROR: $*" >&2; exit 1; }
+log()   { echo "[INFO] $*"; }
+error() { echo "[ERROR] $*" >&2; exit 1; }
 
-log "Starting uninstallation..."
+require_cmd() {
+  for cmd; do
+    command -v "$cmd" >/dev/null || error "Missing required command: $cmd"
+  done
+}
 
-if [[ -f "$BACKUP_FILE" ]]; then
-    log "Restoring original actions-tree.json from backup..."
-    cp -f "$BACKUP_FILE" "$LAYOUT_FILE" || fail "Failed to restore $LAYOUT_FILE from $BACKUP_FILE"
+backup_layout() {
+  mkdir -p "$CONFIG_DIR"
+  if [[ -f "$LAYOUT_FILE" && -f "$BACKUP_FILE" && "${1:-}" != "force" ]]; then
+    error "Backup exists. Use './install.sh force' to overwrite."
+  fi
+  cp "${LAYOUT_FILE:-/dev/null}" "$BACKUP_FILE" 2>/dev/null || echo '{"toplevel":[]}' > "$LAYOUT_FILE" && cp "$LAYOUT_FILE" "$BACKUP_FILE"
+  log "Backup created at $BACKUP_FILE"
+}
 
-    if ! cmp -s "$BACKUP_FILE" "$LAYOUT_FILE"; then
-        fail "Verification failed — restored file differs from backup."
-    fi
-    log "Restoration verified."
+install_files() {
+  mkdir -p "$ICONS_DIR" "$NEMO_ACTIONS_DIR"
+  cp -r ./icons/* "$ICONS_DIR/"
+  cp -r ./nemo/actions/* "$NEMO_ACTIONS_DIR/"
+  mkdir -p "$CONFIG_DIR"
+  cp "$INTEGRATION_JSON" "$LAYOUT_FILE"
 
-    log "Removing backup file..."
-    rm -f "$BACKUP_FILE" || fail "Failed to remove backup file."
-else
-    warn "Backup file not found: $BACKUP_FILE. Skipping restoration step."
-fi
+  find "$NEMO_ACTIONS_DIR" -name '*.nemo_action' -exec sed -i "s|__HOME__|$HOME_DIR|g" {} +
+}
 
-# Remove installed icons
-if [[ -d "$TARGET_ICONS_DIR" ]]; then
-    log "Removing installed icons..."
-    for file in "$BASE_DIR"/icons/*; do
-        target_file="$TARGET_ICONS_DIR/$(basename "$file")"
-        if [[ -f "$target_file" ]]; then
-            rm -f "$target_file" || fail "Failed to remove $target_file"
-            log "Removed $target_file"
-        fi
-    done
-fi
+update_layout() {
+  jq --slurpfile gitmenu "$LAYOUT_FILE" \
+    '.toplevel += $gitmenu[0].toplevel' "$BACKUP_FILE" > "${LAYOUT_FILE}.tmp"
+  mv "${LAYOUT_FILE}.tmp" "$LAYOUT_FILE"
+  log "Updated actions-tree.json with Git submenu."
+}
 
-# Remove installed nemo actions
-if [[ -d "$TARGET_NEMO_ACTIONS_DIR" ]]; then
-    log "Removing installed Nemo actions..."
-    for file in "$BASE_DIR"/nemo/actions/*; do
-        target_file="$TARGET_NEMO_ACTIONS_DIR/$(basename "$file")"
-        if [[ -f "$target_file" ]]; then
-            rm -f "$target_file" || fail "Failed to remove $target_file"
-            log "Removed $target_file"
-        fi
-    done
-fi
+restore_backup() {
+  if [[ -f "$BACKUP_FILE" ]]; then
+    cp "$BACKUP_FILE" "$LAYOUT_FILE"
+    log "Restored backup layout."
+  else
+    error "Backup file missing. Cannot restore."
+  fi
+}
 
-# Remove Git integration folder
-if [[ -d "$GIT_INTEGRATION_DIR" ]]; then
-    log "Removing Git integration directory..."
-    rm -rf "$GIT_INTEGRATION_DIR" || fail "Failed to remove $GIT_INTEGRATION_DIR"
-fi
+remove_files() {
+  rm -f "$ICONS_DIR"/* "$NEMO_ACTIONS_DIR"/* "$LAYOUT_FILE" || true
+  log "Removed installed files."
+}
 
-log "Uninstallation complete."
+main() {
+  require_cmd jq cp rm mkdir sed find
+
+  case "${1:-}" in
+    uninstall)
+      remove_files
+      restore_backup
+      ;;
+    force)
+      backup_layout force
+      install_files
+      update_layout
+      ;;
+    "")
+      backup_layout
+      install_files
+      update_layout
+      ;;
+    *)
+      error "Invalid argument: $1. Usage: $0 [uninstall|force]"
+      ;;
+  esac
+
+  log "Operation complete."
+}
+
+main "$@"
