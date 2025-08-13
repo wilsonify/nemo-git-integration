@@ -1,0 +1,32 @@
+{
+  "toplevel": [
+    {
+      "uuid": "Git",
+      "type": "submenu",
+      "position": 0,
+      "user-label": "Git",
+      "user-icon": "git",
+      "children": [
+        { "uuid": "git01a-init@untracked", "type": "action", "position": 0, "user-label": null, "user-icon": null },
+        { "uuid": "git01b-clone@untracked", "type": "action", "position": 1, "user-label": null, "user-icon": null },
+        { "uuid": "git01c-branch@untracked", "type": "action", "position": 2, "user-label": null, "user-icon": null },
+        { "uuid": "git02a-status@untracked", "type": "action", "position": 3, "user-label": null, "user-icon": null },
+        { "uuid": "git02c-log@untracked", "type": "action", "position": 4, "user-label": null, "user-icon": null },
+        { "uuid": "git02d-fetch@untracked", "type": "action", "position": 5, "user-label": null, "user-icon": null },
+        { "uuid": "git03a-pull@untracked", "type": "action", "position": 6, "user-label": null, "user-icon": null },
+        { "uuid": "git03b-add@untracked", "type": "action", "position": 7, "user-label": null, "user-icon": null },
+        { "uuid": "git03c-commit@untracked", "type": "action", "position": 8, "user-label": null, "user-icon": null },
+        { "uuid": "git03d-push@untracked", "type": "action", "position": 9, "user-label": null, "user-icon": null },
+        { "uuid": "git04a-reset@untracked", "type": "action", "position": 10, "user-label": null, "user-icon": null },
+        { "uuid": "git04b-uninit@untracked", "type": "action", "position": 11, "user-label": null, "user-icon": null },
+        { "uuid": "git04c-unclone@untracked", "type": "action", "position": 12, "user-label": null, "user-icon": null },
+        { "uuid": "git04e-unpull@untracked", "type": "action", "position": 13, "user-label": null, "user-icon": null },
+        { "uuid": "git04f-unadd@untracked", "type": "action", "position": 14, "user-label": null, "user-icon": null },
+        { "uuid": "git04g-uncommit@untracked", "type": "action", "position": 15, "user-label": null, "user-icon": null },
+        { "uuid": "git04h-unpush@untracked", "type": "action", "position": 16, "user-label": null, "user-icon": null }
+      ]
+    }
+  ]
+}
+
+
