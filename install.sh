@@ -40,6 +40,10 @@ install_files() {
   find "$NEMO_ACTIONS_DIR" -name '*.nemo_action' -exec sed -i "s|__HOME__|$HOME_DIR|g" {} +
 
   log "Installed Nemo Git Integration files."
+
+  log "Start Installing Nemo Git Status Extension"
+  ./nemo/extension/install.sh
+  log "Done Installing Nemo Git Status Extension"
 }
 
 main() {
