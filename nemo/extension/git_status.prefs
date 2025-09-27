@@ -1,0 +1,93 @@
+#!/usr/bin/python3
+
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('XApp', '1.0')
+from gi.repository import Gtk, Gio, XApp, Gdk
+
+# i18n
+import gettext
+gettext.bindtextdomain('nemo-extensions')
+gettext.textdomain('nemo-extensions')
+_ = gettext.gettext
+
+
+class LabeledItem(Gtk.Box):
+    def __init__(self, label, item):
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL)
+
+        self.label_widget = Gtk.Label(label=label, xalign=0)
+
+        self.pack_start(self.label_widget, True, True, 6)
+        self.pack_end(item, False, False, 6)
+
+        self.show_all()
+
+
+class Page(Gtk.Box):
+    def __init__(self):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.set_spacing(15)
+        self.set_margin_start(15)
+        self.set_margin_end(15)
+        self.set_margin_top(15)
+        self.set_margin_bottom(15)
+
+
+class NemoFileCheckerPreferencesWindow(XApp.PreferencesWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.set_icon_name("preferences-system")
+        self.set_title(_("Nemo File Checker Preferences"))
+        self.set_skip_taskbar_hint(False)
+        self.set_type_hint(Gdk.WindowTypeHint.NORMAL)
+        self.set_default_size(-1, -1)
+
+        self.connect("destroy", Gtk.main_quit)
+
+        # NOTE: You’ll need a matching schema in:
+        #   /usr/share/glib-2.0/schemas/org.nemo.extensions.nemo-git-status.gschema.xml
+        self.settings = Gio.Settings(schema_id="org.nemo.extensions.nemo-git-status")
+
+        page = Page()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        page.add(box)
+
+        # Toggle switch for enabling emblem checks
+        switch = Gtk.Switch()
+        self.settings.bind("enable-checker",
+                           switch, "active",
+                           Gio.SettingsBindFlags.DEFAULT)
+        widget = LabeledItem(_("Enable file emblem checker"), switch)
+        box.pack_start(widget, False, False, 6)
+
+        # Timeout spinbutton
+        spinner = Gtk.SpinButton.new_with_range(0.1, 10.0, 0.1)
+        spinner.set_digits(1)
+        self.settings.bind("timeout",
+                           spinner, "value",
+                           Gio.SettingsBindFlags.DEFAULT)
+        widget = LabeledItem(_("Timeout (in seconds)"), spinner)
+        box.pack_start(widget, False, False, 6)
+
+        # Make timeout sensitive only if enabled
+        self.settings.bind("enable-checker",
+                           widget, "sensitive",
+                           Gio.SettingsBindFlags.DEFAULT)
+
+        self.add_page(page, "main", _("General"))
+
+        self.show_all()
+
+    def quit(self, *args):
+        self.destroy()
+        Gtk.main_quit()
+
+
+if __name__ == "__main__":
+    import signal
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    window = NemoFileCheckerPreferencesWindow()
+    Gtk.main()

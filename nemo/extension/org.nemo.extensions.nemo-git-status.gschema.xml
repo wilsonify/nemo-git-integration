@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.nemo.extensions.nemo-file-checker"
+          path="/org/nemo/extensions/nemo-file-checker/">
+
+    <key name="enable-checker" type="b">
+      <default>true</default>
+      <summary>Enable file checker</summary>
+      <description>
+        Whether the file checker extension is enabled and allowed to set emblems on files.
+      </description>
+    </key>
+
+    <key name="timeout" type="d">
+      <default>2.0</default>
+      <range min="0.1" max="30.0"/>
+      <summary>Timeout per file</summary>
+      <description>
+        Maximum time in seconds to spend checking a single file before moving on.
+      </description>
+    </key>
+
+  </schema>
+</schemalist>
