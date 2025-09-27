@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.nemo.extensions.nemo-file-checker"
-          path="/org/nemo/extensions/nemo-file-checker/">
+  <schema id="org.nemo.extensions.nemo-git-status"
+          path="/org/nemo/extensions/nemo-git-status/">
 
     <key name="enable-checker" type="b">
       <default>true</default>
-      <summary>Enable file checker</summary>
+      <summary>Enable git status</summary>
       <description>
-        Whether the file checker extension is enabled and allowed to set emblems on files.
+        Whether the git status extension is enabled and allowed to set emblems on files.
       </description>
     </key>
 

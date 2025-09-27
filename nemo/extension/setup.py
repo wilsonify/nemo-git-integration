@@ -13,7 +13,7 @@ setup( packages=[],
     url          = "https://github.com/wilsonify/nemo-git-integration",
     license      = "GPL3",
     data_files   = [
-        ('/usr/share/nemo-python/extensions', ['git_status.py']),
+        ('/usr/share/nemo-python/extensions', ['nemo-git-status.py']),
         ('/usr/bin',                          ['git_status.prefs']),
         ('/usr/share/glib-2.0/schemas',       ['org.nemo.extensions.nemo-git-status.gschema.xml'])
     ]

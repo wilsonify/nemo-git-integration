@@ -1,40 +1,38 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Resolve this script's directory (absolute path)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 EXT_NAME="nemo-git-status"
 EXT_DIR="$HOME/.local/share/nemo-python/extensions"
-SCHEMA_SRC="org.nemo.extensions.nemo-file-checker.gschema.xml"
+SCHEMA_SRC="$SCRIPT_DIR/org.nemo.extensions.nemo-git-status.gschema.xml"
 SCHEMA_DIR="/usr/share/glib-2.0/schemas"
 
-echo ">>> Installing Nemo extension: $EXT_NAME"
+log() { echo "[INFO] $*"; }
+error() { echo "[ERROR] $*" >&2; exit 1; }
 
-# Ensure extension directory exists
+log ">>> Installing Nemo extension: $EXT_NAME"
+
+log "Ensure extension directory exists"
 mkdir -p "$EXT_DIR"
 
-# Copy extension python file
-if [[ -f "$EXT_NAME.py" ]]; then
-    echo " - Copying $EXT_NAME.py to $EXT_DIR/"
-    cp "$EXT_NAME.py" "$EXT_DIR/"
-else
-    echo "ERROR: $EXT_NAME.py not found in current directory!"
-    exit 1
-fi
+log "Copy extension python file"
+log " - Copying $EXT_NAME.py to $EXT_DIR/"
+cp "$SCRIPT_DIR/$EXT_NAME.py" "$EXT_DIR/"
 
 # Copy schema (needs root)
-if [[ -f "$SCHEMA_SRC" ]]; then
-    echo " - Installing schema to $SCHEMA_DIR (requires sudo)"
-    sudo cp "$SCHEMA_SRC" "$SCHEMA_DIR/"
-    echo " - Compiling GSettings schemas"
-    sudo glib-compile-schemas "$SCHEMA_DIR"
-else
-    echo "WARNING: $SCHEMA_SRC not found, skipping schema install."
-fi
+log " - Installing schema to $SCHEMA_DIR (requires sudo)"
+sudo cp "$SCHEMA_SRC" "$SCHEMA_DIR/"
 
-# Restart Nemo
-echo " - Restarting Nemo..."
+log " - Compiling GSettings schemas"
+sudo glib-compile-schemas "$SCHEMA_DIR"
+
+log "Restart Nemo"
+log " - Restarting Nemo..."
 nemo -q || true
 nohup nemo >/dev/null 2>&1 &
 
-echo ">>> Installation complete!"
-echo "You can manage extensions in Nemo via:"
-echo "  Edit -> Plugins"
+log ">>> Installation complete!"
+log "You can manage extensions in Nemo via:"
+log "  Edit -> Plugins"

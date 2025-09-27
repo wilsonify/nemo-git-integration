@@ -39,7 +39,7 @@ class NemoFileCheckerPreferencesWindow(XApp.PreferencesWindow):
         super().__init__()
 
         self.set_icon_name("preferences-system")
-        self.set_title(_("Nemo File Checker Preferences"))
+        self.set_title(_("Nemo git status Preferences"))
         self.set_skip_taskbar_hint(False)
         self.set_type_hint(Gdk.WindowTypeHint.NORMAL)
         self.set_default_size(-1, -1)
