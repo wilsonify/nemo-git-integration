@@ -11,7 +11,7 @@ This extension is designed for the **Nemo File Manager**. It provides additional
 - **Development libraries** (if building or extending the extension):
 
 ```bash
-sudo apt-get install libglib2.0-dev
+sudo apt-get install libglib2.0-dev nemo-python
 ```
 
 ---
