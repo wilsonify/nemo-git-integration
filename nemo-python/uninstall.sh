@@ -2,21 +2,21 @@
 set -euo pipefail
 
 EXT_NAME="nemo-git-status"
-EXT_DIR="$HOME/.local/share/nemo-python/extensions"
-SCHEMA_FILE="org.nemo.extensions.nemo-git-status.gschema.xml"
+EXT_DIR="$HOME/.local/share/nemo-python/scripts"
+SCHEMA_FILE="org.nemo.scripts.nemo-git-status.gschema.xml"
 SCHEMA_DIR="/usr/share/glib-2.0/schemas"
 
 log() { echo "[INFO] $*"; }
 error() { echo "[ERROR] $*" >&2; exit 1; }
 
-log ">>> Uninstalling Nemo extension: $EXT_NAME"
+log ">>> Uninstalling Nemo scripts: $EXT_NAME"
 
-log "Remove extension python file"
+log "Remove scripts python file"
 if [ -f "$EXT_DIR/$EXT_NAME.py" ]; then
     log "Removing $EXT_DIR/$EXT_NAME.py"
     rm -f "$EXT_DIR/$EXT_NAME.py"
 else
-    log "Extension file not found in $EXT_DIR (skipping)"
+    log "scripts file not found in $EXT_DIR (skipping)"
 fi
 
 log "Remove schema file (requires sudo)"

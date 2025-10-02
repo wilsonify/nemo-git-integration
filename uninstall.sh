@@ -27,9 +27,9 @@ remove_files() {
   rm -f "$ICONS_DIR"/* "$NEMO_ACTIONS_DIR"/* "$LAYOUT_FILE" || true
   log "Removed installed Nemo Git Integration files."
 
-  log "Start uninstalling Nemo Git Status Extension"
-  ./nemo-python/extensions/uninstall.sh
-  log "Done uninstalling Nemo Git Status Extension"
+  log "Start uninstalling Nemo Git Status scripts"
+  ./nemo-python/scripts/uninstall.sh
+  log "Done uninstalling Nemo Git Status scripts"
 
 }
 
