@@ -1,38 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Resolve this script's directory (absolute path)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+EXT_NAME='nemo-git-status'
+EXT_DIR="$HOME/.local/share/nemo-python/extensions"
+SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/extensions" && pwd)"
 
-EXT_NAME="nemo-git-status"
-EXT_DIR="$HOME/.local/share/nemo-python/scripts"
-SCHEMA_SRC="$SCRIPT_DIR/org.nemo.scripts.nemo-git-status.gschema.xml"
-SCHEMA_DIR="/usr/share/glib-2.0/schemas"
-
-log() { echo "[INFO] $*"; }
-error() { echo "[ERROR] $*" >&2; exit 1; }
-
-log ">>> Installing Nemo scripts: $EXT_NAME"
-
-log "Ensure scripts directory exists"
+echo "[INFO] Installing $EXT_NAME to $EXT_DIR"
 mkdir -p "$EXT_DIR"
+cp "$SRC_DIR/$EXT_NAME.py" "$EXT_DIR/"
 
-log "Copy scripts python file"
-log " - Copying $EXT_NAME.py to $EXT_DIR/"
-cp "$SCRIPT_DIR/$EXT_NAME.py" "$EXT_DIR/"
-
-# Copy schema (needs root)
-log " - Installing schema to $SCHEMA_DIR (requires sudo)"
-sudo cp "$SCHEMA_SRC" "$SCHEMA_DIR/"
-
-log " - Compiling GSettings schemas"
-sudo glib-compile-schemas "$SCHEMA_DIR"
-
-log "Restart Nemo"
-log " - Restarting Nemo..."
+echo "[INFO] Restarting Nemo..."
 nemo -q || true
 nohup nemo >/dev/null 2>&1 &
 
-log ">>> Installation complete!"
-log "You can manage scripts in Nemo via:"
-log "  Edit -> Plugins"
+echo "[INFO] Installation complete!"
+echo "[INFO] Manage extensions in Nemo: Edit -> Plugins"
