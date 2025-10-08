@@ -165,7 +165,7 @@ class GitColumns(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider):
         logging.debug("update_file_info_full called for URI=%s", uri)
 
         path = uri_to_path(uri)
-        if not path or should_skip_path(path) or not os.path.isdir(path):
+        if not path or should_skip_path(path):
             self._apply_info(file, {"git_repo": "", "git_branch": "", "git_status": ""})
             return Nemo.OperationResult.COMPLETE
 
