@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-EXT_NAME='nemo-git-status'
+EXT_NAME='nemo_git_status'
 EXT_DIR="$HOME/.local/share/nemo-python/extensions"
 SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/extensions" && pwd)"
 

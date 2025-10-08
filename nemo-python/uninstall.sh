@@ -1,6 +1,6 @@
 set -euo pipefail
 
-EXT_NAME="nemo-git-status"
+EXT_NAME="nemo_git_status"
 EXT_DIR="$HOME/.local/share/nemo-python/scripts"
 
 echo "[INFO] >>> Uninstalling Nemo scripts: $EXT_NAME"
