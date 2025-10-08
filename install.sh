@@ -14,7 +14,9 @@ NEMO_ACTIONS_DIR="${HOME_DIR}/.local/share/nemo/actions"
 nemo_git_integration_DIR="${HOME_DIR}/.local/share/nemo/nemo-git-integration"
 CONFIG_DIR="${HOME_DIR}/.config/nemo/actions"
 
-
+# formats arguments as info, error
+# >&2 redirects the output to stderr so that calling processes/tools can detect errors.
+# exit 1 stops the script immediately with failure status.
 log() { echo "[INFO] $*"; }
 error() { echo "[ERROR] $*" >&2; exit 1; }
 
