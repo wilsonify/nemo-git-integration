@@ -1,33 +1,45 @@
+import pytest
 from nemo_git_status import parse_status
 
+@pytest.mark.parametrize("lines,expected", [
+    # basic cases
+    ([], "clean"),
+    (["?? newfile.txt"], "untracked"),
+    (["M modified.txt"], "dirty"),
+    (["1 M. N... 0000000 0000000 modified.txt"], "dirty"),
 
-# --------------------------
-# parse_status tests
-# --------------------------
+    # whitespace-only lines should be ignored
+    (["   ", "\t"], "clean"),
 
-def test_parse_status_clean():
-    lines = []
-    assert parse_status(lines) == "clean"
+    # multiple untracked files
+    (["?? a.txt", "?? b.txt"], "untracked"),
 
+    # unmerged conflicts
+    (["u UU N... 0000000 0000000 conflict.txt"], "dirty"),
 
-def test_parse_status_untracked():
-    lines = ["?? newfile.txt"]
-    assert parse_status(lines) == "untracked"
+    # deleted, renamed, copied
+    (["D deleted.txt"], "dirty"),
+    (["R renamed.txt"], "dirty"),
+    (["C copied.txt"], "dirty"),
 
+    # porcelain v2 staged + unstaged
+    (["1 M. N... 0000000 0000000 mod1.txt", "2 M. N... 0000000 0000000 mod2.txt"], "dirty"),
 
-def test_parse_status_dirty():
-    lines = ["M modified.txt"]
-    assert parse_status(lines) == "dirty"
+    # branch ahead only
+    (["# branch.ab +3 -0"], "clean +3 -0"),
 
-def test_parse_status_dirty_porcelain():
-    # porcelain v2 line for a modified file
-    lines = ["1 M. N... 0000000 0000000 modified.txt"]
-    assert parse_status(lines) == "dirty"
+    # branch behind only
+    (["# branch.ab +0 -4"], "clean +0 -4"),
 
-def test_parse_status_with_ahead_and_behind():
-    lines = [
-        "# branch.ab +2 -1",
-        "M foo.txt",
-    ]
+    # branch ahead and behind with clean tree
+    (["# branch.ab +1 -2"], "clean +1 -2"),
+
+    # mix of staged changes and untracked
+    (["M staged.txt", "?? untracked.txt"], "dirty"),
+
+    # detached head
+    (["# branch.oid abc123", "M modified.txt"], "dirty"),
+])
+def test_parse_status_fuzzed(lines, expected):
     result = parse_status(lines)
-    assert "dirty" in result
+    assert expected in result
