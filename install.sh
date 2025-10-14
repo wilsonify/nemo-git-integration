@@ -44,7 +44,7 @@ install_files() {
   log "Installed Nemo Git Integration files."
 
   log "Start Installing Nemo Git Status scripts"
-  ./nemo-python/scripts/install.sh
+  ./nemo-python/install.sh
   log "Done Installing Nemo Git Status scripts"
 }
 

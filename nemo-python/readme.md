@@ -1,6 +1,8 @@
 # Nemo Git Integration scripts
 
-This scripts is designed for the **Nemo File Manager**. It provides additional columns in the **List View** related to the Git status of files and integrates Git actions using emblems.
+This extension is designed for the **Nemo File Manager**. 
+
+It provides additional columns in the **List View** related to the Git status of files.
 
 ---
 
@@ -8,28 +10,23 @@ This scripts is designed for the **Nemo File Manager**. It provides additional c
 
 - **Nemo** (>= 5.6.4)  
 
-- **Development libraries** (if building or extending the scripts):
+- **nemo-python**
 
 ```bash
-sudo apt-get install libglib2.0-dev nemo-python
+sudo apt-get install nemo-python
 ```
 
 ---
 
 ## Installation
 
-Run the top-level install script from the repository root:
+Run the top-level installation script from the repository root:
 
 ```bash
 ./install.sh
 ```
 
-This script will:
-
-- Copy the Python scripts to `~/.local/share/nemo-python/scripts/`  
-- Install the GSettings schema (`org.nemo.scripts.nemo-file-checker.gschema.xml`) into `/usr/share/glib-2.0/schemas/` (requires `sudo`)  
-- Recompile schemas and restart Nemo automatically  
-
+This script will copy the Python script to `~/.local/share/nemo-python/extensions/`
 If Nemo doesn’t restart automatically, you can manually restart it:
 
 ```bash
@@ -38,23 +35,25 @@ nemo -q && nemo &
 
 ---
 
-## Managing the scripts
+## Managing the extension
 
-In Nemo, enable or disable scripts via:  
+In Nemo, enable or disable extension via:  
 
 **Edit → Plugins**
 
-You should see **Nemo Git Integration** (or `nemo-git-status`) in the plugin list.
+You should see **Nemo Git Integration** (or `nemo-git-status`) in the extension list.
+
+![img.png](img.png)
 
 ---
 
 ## Troubleshooting
 
 - **scripts not visible**:  
-  Ensure `python3-nemo` is installed and the scripts files exist in the correct directory:
+  Ensure `nemo-python` is installed and the scripts files exist in the correct directory:
 
 ```bash
-ls ~/.local/share/nemo-python/scripts/
+ls ~/.local/share/nemo-python/extensions/
 ```
 
 - **Schema errors**:  

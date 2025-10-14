@@ -28,7 +28,7 @@ remove_files() {
   log "Removed installed Nemo Git Integration files."
 
   log "Start uninstalling Nemo Git Status scripts"
-  ./nemo-python/scripts/uninstall.sh
+  ./nemo-python/uninstall.sh
   log "Done uninstalling Nemo Git Status scripts"
 
 }

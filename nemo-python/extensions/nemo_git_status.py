@@ -4,7 +4,7 @@ import os
 import re
 import subprocess
 import time
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional
 from urllib import parse
 
 from gi.repository import Nemo, GObject
@@ -73,8 +73,6 @@ def parse_porcelain_status(lines: List[str]) -> Dict[str, str]:
             status_map[stripped[2:].strip()] = "untracked"
 
     return status_map
-
-
 
 
 def get_repo_branch(repo_root: str, cache: dict) -> str:
@@ -167,30 +165,38 @@ def get_file_git_info(path: str, cache: dict) -> dict:
 #  Nemo Integration
 # ============================================================
 
-class GitColumns(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider):
+
+class NemoGitIntegration(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider, Nemo.NameAndDescProvider):
     """Provide per-file Git columns in Nemo."""
 
     def __init__(self):
         super().__init__()
         self._cache: dict[str, tuple[float, dict]] = {}
 
+    def get_name_and_desc(self):
+        """
+        Return a list of strings in the format "name::desc[:executable]".
+        Optional executable path can be included for context menus or preferences.
+        """
+        return [f"nemo-git-integration:::Provides git status columns"]
+
     @staticmethod
     def get_columns():
         return (
             Nemo.Column(
-                name="NemoPython::git_repo",
+                name="NemoGitIntegration::git_repo",
                 attribute="git_repo",
                 label="Git Repo",
                 description="Whether this folder belongs to a Git repository",
             ),
             Nemo.Column(
-                name="NemoPython::git_branch",
+                name="NemoGitIntegration::git_branch",
                 attribute="git_branch",
                 label="Git Branch",
                 description="Current Git branch",
             ),
             Nemo.Column(
-                name="NemoPython::git_status",
+                name="NemoGitIntegration::git_status",
                 attribute="git_status",
                 label="Git Status",
                 description="Working tree status",
