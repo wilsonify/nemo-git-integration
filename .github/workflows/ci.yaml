@@ -27,6 +27,8 @@ jobs:
       - name: Run Bats tests
         run: |
           sudo true
+          sudo apt update
+          sudo apt upgrade -y
           make test          
 
       - name: test nemo extension
