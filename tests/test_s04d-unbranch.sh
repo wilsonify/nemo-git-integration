@@ -10,6 +10,11 @@ setup() {
   # Init repo
   cd "$TEST_DIR"
   git init > /dev/null
+
+  # Set local Git user/email so commits succeed in CI
+  git config user.name "CI Runner"
+  git config user.email "ci@example.com"
+
   echo "first" > file.txt
   git add file.txt && git commit -m "init" > /dev/null
 
@@ -28,7 +33,6 @@ EOF
   mkdir -p "$HOME/.cache"
 
   chown -R $USER "$TEST_DIR"
-
 }
 
 teardown() {
@@ -82,4 +86,3 @@ teardown() {
   [ "$status" -eq 1 ]
   run grep -- "Branch Mismatch" "$ZENITY_LOG"
 }
-
