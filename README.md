@@ -7,6 +7,7 @@ This project brings Git functionality into Nemo, the file manager used in the Ci
 
 It lets you perform common Git operations via right-click, without opening a terminal or IDE.
 
+![](docs/Screenshot%20from%202025-10-14%2015-15-14.png)
 
 # Get Started 
 
@@ -26,13 +27,13 @@ make uninstall  # Removes installed actions
 5. copy all *.nemo_action files to your ~/.local/share/nemo/actions or ```make install``` as mentioned above.
 
 6. Zenity is used for graphical dialogs. if you don't have it then you can install it with apt ```sudo apt install zenity```
+ 
+7. nemo-python is used for nemo extension columns. if you don't have it then you can install it with apt ```sudo apt install nemo-python```
 
-![image](https://github.com/wilsonify/nemo-git-integration/assets/26659886/e41bb677-e998-4b50-9ddc-af0f1370aff1)
 
 # Usage
 
 Each action is accessed by right-clicking files or folders in Nemo.
-
 
 ## Project Structure
 
@@ -151,3 +152,45 @@ see nemo --help for more details
 ```
 NEMO_DEBUG=Actions,Window nemo --debug
 ```
+
+# Nemo Git Integration scripts
+
+This extension is designed for the **Nemo File Manager**. 
+
+It provides additional columns in the **List View** related to the Git status of files.
+
+---
+
+## Requirements
+
+- **Nemo** (>= 5.6.4)  
+
+- **nemo-python**
+
+```bash
+sudo apt-get install nemo-python
+```
+
+---
+
+## Managing the extension
+
+In Nemo, enable or disable extension via:  
+
+**Edit → Plugins**
+
+You should see **Nemo Git Integration** (or `nemo-git-status`) in the extension list.
+
+![](docs/img2.png)
+
+---
+
+## Troubleshooting
+
+- **scripts not visible**:  
+  Ensure `nemo-python` is installed and the scripts files exist in the correct directory:
+
+```bash
+ls ~/.local/share/nemo-python/extensions/
+```
+

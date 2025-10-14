@@ -14,7 +14,7 @@ REPO_URL=$(zenity --entry --title="Git Clone" --text="Enter the Git repository U
 
 # Cancel check or empty input
 if [ -z "$REPO_URL" ]; then
-  zenity --warning --title="No URL Entered" --text="You must enter a repository URL."
+  zenity --error --title="No URL Entered" --text="You must enter a repository URL."
   exit 1
 fi
 

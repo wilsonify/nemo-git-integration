@@ -2,7 +2,7 @@
 all: uninstall install
 
 prereq:
-	sudo apt update && sudo apt install -y zenity git
+	sudo apt update && sudo apt install -y zenity git nemo-python
 
 install:
 	@echo "Running install script..."
