@@ -28,6 +28,11 @@ jobs:
       - name: Install nemo-git-integration
         run: make install
 
+      - name: Configure Git user
+        run: |
+          git config --global user.name "CI Runner"
+          git config --global user.email "ci@example.com"
+
       - name: Run Bats tests
         run: make test
 
