@@ -1,0 +1,45 @@
+
+name: Continuous Integration
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+    types: [ synchronize ]
+
+jobs:
+  bats-and-pytests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git bats-core zenity nemo-python python3-pip
+          pip3 install --upgrade pip
+          pip3 install pytest
+
+      - name: Verify installation
+        run: |
+          git --version
+          bats --version
+          zenity --version
+          python3 --version
+          pytest --version
+
+      - name: Run Bats tests
+        run: |
+          echo "Running all Bats tests in the tests/ folder..."
+          bats tests/
+
+      - name: Run Python tests with pytest
+        working-directory: nemo-python
+        env:
+          PYTHONPATH: ${{ github.workspace }}/nemo-python/extensions
+        run: |
+          echo "Running pytest for nemo-python/tests..."
+          pytest tests/
