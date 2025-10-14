@@ -45,12 +45,12 @@ teardown() {
   [ -d "$TEST_DIR/nemo-git-integration/.git" ]
 }
 
-@test "s01b-clone.sh shows warning when no URL is entered" {
+@test "s01b-clone.sh shows error when no URL is entered" {
   export ZENITY_MOCK_REPO_URL=""
 
   run "$TEST_DIR/$SCRIPT_NAME" "$TEST_DIR"
 
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 1 ]
   [ ! -d "$TEST_DIR/.git" ]
 }
 

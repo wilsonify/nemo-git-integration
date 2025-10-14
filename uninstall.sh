@@ -26,11 +26,15 @@ require_cmds() {
 remove_files() {
   rm -f "$ICONS_DIR"/* "$NEMO_ACTIONS_DIR"/* "$LAYOUT_FILE" || true
   log "Removed installed Nemo Git Integration files."
-
   log "Start uninstalling Nemo Git Status scripts"
-  ./nemo-python/uninstall.sh
+  echo "[INFO] >>> Uninstalling Nemo scripts: nemo_git_status"
+  rm -f "$HOME/.local/share/nemo-python/extensions/nemo_git_status.py"
+  rm -f "$HOME/.local/share/nemo-python/extensions/__pycache__"
+  echo "[INFO] Restarting Nemo..."
+  nemo -q || true
+  nohup nemo >/dev/null 2>&1 &
+  echo "[INFO] >>> Uninstallation complete!"
   log "Done uninstalling Nemo Git Status scripts"
-
 }
 
 main() {
