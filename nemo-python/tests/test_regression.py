@@ -39,8 +39,8 @@ def test_e2e_clean_repo_with_branch_info():
         run_git(repo_root, "commit", "-m", "Initial commit")
 
         # Get git info for a clean file
-        cache = {}
-        info = get_file_git_info(str(readme), cache)
+
+        info = get_file_git_info(str(readme))
 
         # Expect repo detected, branch name available, and status = 'clean'
         assert info["git_repo"] == ""
@@ -70,16 +70,16 @@ def test_modified_file_shows_dirty():
         mod_file = repo_root / "clean1.txt"
         mod_file.write_text("modified content\n")
 
-        cache = {}
+
 
         # Check modified file
-        mod_info = get_file_git_info(str(mod_file), cache)
+        mod_info = get_file_git_info(str(mod_file))
         assert mod_info["git_status"] == "dirty"
         assert mod_info["git_repo"] == ""
 
         # Check unmodified file
         clean_file = repo_root / "clean2.txt"
-        clean_info = get_file_git_info(str(clean_file), cache)
+        clean_info = get_file_git_info(str(clean_file))
         assert clean_info["git_status"] == "clean"
         assert clean_info["git_repo"] == ""
 
@@ -116,8 +116,8 @@ def test_modified_file_detects_dirty_status():
         )
 
         # Run your extension function
-        cache = {}
-        info = get_file_git_info(str(contrib_file), cache)
+
+        info = get_file_git_info(str(contrib_file))
 
         # Expect status to be dirty
         assert info["git_repo"] == ""
