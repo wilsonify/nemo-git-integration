@@ -43,7 +43,7 @@ def test_e2e_clean_repo_with_branch_info():
         info = get_file_git_info(str(readme), cache)
 
         # Expect repo detected, branch name available, and status = 'clean'
-        assert info["git_repo"] == "yes"
+        assert info["git_repo"] == ""
         assert info["git_status"] == "clean"
         assert isinstance(info["git_branch"], str)
         assert len(info["git_branch"]) > 0
@@ -75,13 +75,13 @@ def test_modified_file_shows_dirty():
         # Check modified file
         mod_info = get_file_git_info(str(mod_file), cache)
         assert mod_info["git_status"] == "dirty"
-        assert mod_info["git_repo"] == "yes"
+        assert mod_info["git_repo"] == ""
 
         # Check unmodified file
         clean_file = repo_root / "clean2.txt"
         clean_info = get_file_git_info(str(clean_file), cache)
         assert clean_info["git_status"] == "clean"
-        assert clean_info["git_repo"] == "yes"
+        assert clean_info["git_repo"] == ""
 
 
 def test_modified_file_detects_dirty_status():
@@ -120,7 +120,7 @@ def test_modified_file_detects_dirty_status():
         info = get_file_git_info(str(contrib_file), cache)
 
         # Expect status to be dirty
-        assert info["git_repo"] == "yes"
+        assert info["git_repo"] == ""
         assert info["git_status"] == "dirty", (
             f"Expected dirty status, got {info['git_status']!r}"
         )

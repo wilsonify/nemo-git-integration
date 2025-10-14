@@ -26,6 +26,8 @@ make uninstall  # Removes installed actions
 5. copy all *.nemo_action files to your ~/.local/share/nemo/actions or ```make install``` as mentioned above.
 
 6. Zenity is used for graphical dialogs. if you don't have it then you can install it with apt ```sudo apt install zenity```
+ 
+7. nemo-python is used for nemo extension columns. if you don't have it then you can install it with apt ```sudo apt install nemo-python```
 
 ![image](https://github.com/wilsonify/nemo-git-integration/assets/26659886/e41bb677-e998-4b50-9ddc-af0f1370aff1)
 
@@ -33,6 +35,9 @@ make uninstall  # Removes installed actions
 
 Each action is accessed by right-clicking files or folders in Nemo.
 
+# Nemo Extension to display git status as a column 
+
+![img.png](img.png)
 
 ## Project Structure
 
@@ -151,3 +156,5 @@ see nemo --help for more details
 ```
 NEMO_DEBUG=Actions,Window nemo --debug
 ```
+
+
