@@ -124,10 +124,16 @@ def should_skip(path: str) -> bool:
     normalized = path.replace("\\", "/")
 
     # Match '.git' as a directory (must be surrounded by slashes or boundaries)
-    # Do not match .gitignore or .github
+    # Do not match .gitignore
     pattern = r'(^|/)\.git(/|$)'
 
     return bool(re.search(pattern, normalized))
+
+
+def get_origin_url(repo_root: str) -> str:
+    """Return the URL of the 'origin' remote or empty string if none."""
+    url = run_git(repo_root, "remote", "get-url", "origin")
+    return url or ""
 
 
 def get_file_git_info(path: str, cache: dict) -> dict:
@@ -158,7 +164,10 @@ def get_file_git_info(path: str, cache: dict) -> dict:
     rel_path = os.path.relpath(path, repo_root)
     status = file_status_map.get(rel_path, "clean")
 
-    return {"git_repo": "yes", "git_branch": branch, "git_status": status}
+    # get origin URL
+    origin_url = get_origin_url(repo_root)
+
+    return {"git_repo": origin_url, "git_branch": branch, "git_status": status}
 
 
 # ============================================================
@@ -173,12 +182,13 @@ class NemoGitIntegration(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider
         super().__init__()
         self._cache: dict[str, tuple[float, dict]] = {}
 
-    def get_name_and_desc(self):
+    @staticmethod
+    def get_name_and_desc():
         """
         Return a list of strings in the format "name::desc[:executable]".
         Optional executable path can be included for context menus or preferences.
         """
-        return [f"nemo-git-integration:::Provides git status columns"]
+        return ["nemo-git-integration:::Provides git status columns"]
 
     @staticmethod
     def get_columns():
@@ -207,6 +217,9 @@ class NemoGitIntegration(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider
         """Called by Nemo for each file in view."""
         uri = file.get_activation_uri()
         logging.debug("update_file_info_full: %s", uri)
+        logging.debug("provider: %s", provider)
+        logging.debug("handle: %s", handle)
+        logging.debug("closure: %s", closure)
         path = uri_to_path(uri)
         info = get_file_git_info(path, self._cache)
         self._apply_info(file, info)
