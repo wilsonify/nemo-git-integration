@@ -4,7 +4,7 @@ import os
 import re
 import subprocess
 import time
-from typing import List, Tuple, Optional
+from typing import List, Dict, Optional, Tuple
 from urllib import parse
 
 from gi.repository import Nemo, GObject
@@ -19,11 +19,11 @@ logging.basicConfig(
 
 
 # ============================================================
-#  Git Core Utilities (Repository-level actions)
+#  Git Utilities
 # ============================================================
 
 def run_git(path: str, *args, timeout: int = 2) -> Optional[str]:
-    """Run a git command inside the specified directory and return stripped output or None."""
+    """Run a git command inside a directory and return stripped output or None."""
     if not path or not os.path.isdir(path):
         return None
     cmd = ["git", "-C", path, *args]
@@ -36,98 +36,69 @@ def run_git(path: str, *args, timeout: int = 2) -> Optional[str]:
         return None
 
 
-def parse_status(lines: List[str]) -> str:
-    """Parse git status lines (porcelain v1 or v2) into a human-readable state."""
-    dirty, untracked = False, False
-    ahead, behind = "", ""
+def parse_porcelain_status(lines: List[str]) -> Dict[str, str]:
+    """
+    Parse `git status --porcelain[=v2] --branch` output into per-file status.
+    Returns dict: filepath -> status ('clean'|'dirty'|'untracked').
 
-    for line in lines:
-        line = line.strip()
-        if not line:
+    Handles both porcelain v1 and v2 formats, including untracked files (??).
+    """
+    status_map: Dict[str, str] = {}
+
+    for raw_line in lines:
+        line = raw_line.rstrip()
+        if not line or line.startswith("#"):
             continue
 
-        # parse branch info
-        if line.startswith("# branch.ab"):
-            ahead, behind = _parse_branch_ab(line)
+        stripped = line.lstrip()
+
+        # --- Untracked entries (??) ---
+        if stripped.startswith("?? "):
+            filepath = stripped[3:].strip()
+            status_map[filepath] = "untracked"
             continue
 
-        # parse file status
-        status_type = _parse_file_status(line)
-        if status_type == "dirty":
-            dirty = True
-        elif status_type == "untracked":
-            untracked = True
+        # --- Porcelain v2 entries (1, 2, or u) ---
+        if stripped[0] in ("1", "2", "u"):
+            parts = stripped.split()
+            if len(parts) >= 2:
+                status_map[parts[-1]] = "dirty"
+            continue
 
-    return _build_status(dirty, untracked, ahead, behind)
+        # --- Porcelain v1 entries (M, A, D, R, C, ?) ---
+        code = stripped[0]
+        if code in ("M", "A", "D", "R", "C"):
+            status_map[stripped[2:].strip()] = "dirty"
+        elif code == "?":
+            status_map[stripped[2:].strip()] = "untracked"
 
-
-# ---- Helpers ----
-
-def _parse_branch_ab(line: str) -> Tuple[str, str]:
-    """Extract ahead/behind numbers from a '# branch.ab' line."""
-    ahead, behind = "", ""
-    parts = line.split()
-    for p in parts:
-        if p.startswith("+") and p[1:].isdigit():
-            ahead = p[1:]
-        elif p.startswith("-") and p[1:].isdigit():
-            behind = p[1:]
-    return ahead, behind
+    return status_map
 
 
-def _parse_file_status(line: str) -> str | None:
-    """Return 'dirty', 'untracked', or None depending on the line."""
-    if not line:
-        return None
-    c = line[0]
-    if c in ("1", "2", "u", "M", "A", "D", "R", "C"):
-        return "dirty"
-    if c == "?":
-        return "untracked"
-    return None
 
 
-def _build_status(dirty: bool, untracked: bool, ahead: str, behind: str) -> str:
-    """Construct the final status string."""
-    if dirty:
-        base = "dirty"
-    elif untracked:
-        base = "untracked"
-    else:
-        base = "clean"
-
-    if ahead or behind:
-        base += f" +{ahead} -{behind}"
-
-    return base
-
-
-def get_repo_info(repo_root: str, cache: dict, ttl: int = CACHE_TTL) -> dict[str, str]:
-    """Return cached or fresh repo-level info: branch name and working tree status."""
+def get_repo_branch(repo_root: str, cache: dict) -> str:
+    """Return current branch or detached head string, with caching."""
     now = time.time()
     cached = cache.get(repo_root)
-
-    if cached and now - cached[0] < ttl and cached[1]["git_status"] == "clean":
-        return cached[1]
-
+    if cached and now - cached[0] < CACHE_TTL:
+        return cached[1].get("git_branch", "")
     branch = run_git(repo_root, "rev-parse", "--abbrev-ref", "HEAD") or ""
     if branch == "HEAD":
         commit = run_git(repo_root, "rev-parse", "--short", "HEAD") or ""
         branch = f"detached@{commit}"
+    return branch
 
-    status_output = run_git(repo_root, "status", "--porcelain=v2", "--branch")
-    lines = status_output.splitlines() if status_output else []
-    status = parse_status(lines) if lines else "clean"
 
-    info = {"git_repo": "yes", "git_branch": branch, "git_status": status}
-    cache[repo_root] = (now, info)
-    return info
+def resolve_repo_root(path: str) -> Optional[str]:
+    """Given a file or directory, find its Git repo root (if any)."""
+    search_path = path if os.path.isdir(path) else os.path.dirname(path)
+    return run_git(search_path, "rev-parse", "--show-toplevel")
 
 
 # ============================================================
-#  File-Level Logic (path conversion, classification, filtering)
+#  File path Logic
 # ============================================================
-
 
 def uri_to_path(uri: str) -> Optional[str]:
     """Convert a file:// URI to a local filesystem path with safe decoding."""
@@ -151,33 +122,49 @@ def uri_to_path(uri: str) -> Optional[str]:
 
 
 def should_skip(path: str) -> bool:
-    """Return True if the path is inside a .git directory (case-sensitive on Unix)."""
-    # Normalize Windows backslashes to forward slashes
+    """Return True if path is inside .git directory."""
     normalized = path.replace("\\", "/")
 
-    # Match '.git' as a directory (must be surrounded by slashes or string boundaries)
+    # Match '.git' as a directory (must be surrounded by slashes or boundaries)
     # Do not match .gitignore or .github
-    return bool(re.search(r'(^|/)\.git(/|$)', normalized))
+    pattern = r'(^|/)\.git(/|$)'
+
+    return bool(re.search(pattern, normalized))
 
 
-def resolve_repo_root(path: str) -> Optional[str]:
-    """Given a file or directory, find its Git repo root (if any)."""
-    search_path = path if os.path.isdir(path) else os.path.dirname(path)
-    return run_git(search_path, "rev-parse", "--show-toplevel")
-
-
-def get_file_git_info(path: str, cache: dict) -> dict[str, str]:
-    """Return git info for an arbitrary file or directory."""
+def get_file_git_info(path: str, cache: dict) -> dict:
+    """
+    Return per-file Git info: repo presence, branch, and file status.
+    """
     if should_skip(path):
         return {"git_repo": "", "git_branch": "", "git_status": ""}
     repo_root = resolve_repo_root(path)
     if not repo_root:
         return {"git_repo": "", "git_branch": "", "git_status": ""}
-    return get_repo_info(repo_root, cache)
+
+    # branch (cached)
+    branch = get_repo_branch(repo_root, cache)
+
+    # full repo status (cached)
+    now = time.time()
+    cached = cache.get(repo_root)
+    if cached and now - cached[0] < CACHE_TTL and "file_status_map" in cached[1]:
+        file_status_map = cached[1]["file_status_map"]
+    else:
+        output = run_git(repo_root, "status", "--porcelain=v2", "--branch")
+        lines = output.splitlines() if output else []
+        file_status_map = parse_porcelain_status(lines)
+        cache[repo_root] = (now, {"git_branch": branch, "file_status_map": file_status_map})
+
+    # determine file status
+    rel_path = os.path.relpath(path, repo_root)
+    status = file_status_map.get(rel_path, "clean")
+
+    return {"git_repo": "yes", "git_branch": branch, "git_status": status}
 
 
 # ============================================================
-#  Nemo Integration Layer
+#  Nemo Integration
 # ============================================================
 
 class GitColumns(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider):
@@ -185,7 +172,7 @@ class GitColumns(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider):
 
     def __init__(self):
         super().__init__()
-        self._cache: dict[str, tuple[float, dict[str, str]]] = {}
+        self._cache: dict[str, tuple[float, dict]] = {}
 
     @staticmethod
     def get_columns():
@@ -214,14 +201,13 @@ class GitColumns(GObject.GObject, Nemo.ColumnProvider, Nemo.InfoProvider):
         """Called by Nemo for each file in view."""
         uri = file.get_activation_uri()
         logging.debug("update_file_info_full: %s", uri)
-
         path = uri_to_path(uri)
         info = get_file_git_info(path, self._cache)
         self._apply_info(file, info)
         return Nemo.OperationResult.COMPLETE
 
     @staticmethod
-    def _apply_info(file, info: dict[str, str]):
+    def _apply_info(file, info: dict):
         """Attach computed info to a Nemo file object."""
         for key in ("git_repo", "git_branch", "git_status"):
             file.add_string_attribute(key, info.get(key, ""))
