@@ -2,7 +2,7 @@
 
 setup() {
   TEST_DIR=$(mktemp -d)
-  SOURCE_DIR="/mnt/SSD1/mrepos/github.com/wilsonify/nemo-git-integration/nemo-git-integration"
+  SOURCE_DIR="${BATS_TEST_DIRNAME}/../nemo-git-integration"
   SCRIPT="$TEST_DIR/s04a-reset.sh"
   cp "$SOURCE_DIR/s04-delete/s04a-reset.sh" "$SCRIPT"
   chmod +x "$SCRIPT"

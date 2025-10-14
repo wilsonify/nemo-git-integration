@@ -2,7 +2,7 @@
 
 setup() {
   TEST_DIR=$(mktemp -d)
-  SOURCE_DIR="/mnt/SSD1/mrepos/github.com/wilsonify/nemo-git-integration/nemo-git-integration"
+  SOURCE_DIR="${BATS_TEST_DIRNAME}/../nemo-git-integration"
   SCRIPT_NAME="s01c-branch.sh"
   SCRIPT_PATH="$SOURCE_DIR/s01-create/$SCRIPT_NAME"
 

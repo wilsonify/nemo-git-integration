@@ -2,7 +2,7 @@
 
 setup() {
   TEST_DIR=$(mktemp -d)
-  SOURCE_DIR="/mnt/SSD1/mrepos/github.com/wilsonify/nemo-git-integration/nemo-git-integration"
+  SOURCE_DIR="${BATS_TEST_DIRNAME}/../nemo-git-integration"
   SCRIPT="$TEST_DIR/s03b-add.sh"
   cp "$SOURCE_DIR/s03-update/s03b-add.sh" "$SCRIPT"
   chmod +x "$SCRIPT"
