@@ -11,16 +11,6 @@ Perform common Git operations via right-click without opening a terminal or IDE.
 
 ## Table of Contents
 
-- [User Guide](user.md)
-- [Developer Guide](developer.md)
-- [Administrator Guide](admin.md)
-- [Troubleshooting](#troubleshooting)
-
----
-
-## Troubleshooting
-
-- **Scripts not visible:**  
-```bash
-ls ~/.local/share/nemo-python/extensions/
-```
+- [User Guide](01user.md)
+- [Developer Guide](02developer.md)
+- [Administrator Guide](03admin.md)
