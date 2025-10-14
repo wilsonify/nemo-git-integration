@@ -18,25 +18,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y git bats-core zenity nemo-python python3-pip
-          pip3 install --upgrade pip
-          pip3 install pytest
+          make dev
 
-      - name: Verify installation
+      - name: Install nemo-git-integration
         run: |
-          git --version
-          bats --version
-          zenity --version
-          python3 --version
-          pytest --version
+          make install
 
       - name: Run Bats tests
         run: |
-          echo "Running all Bats tests in the tests/ folder..."
-          bats tests/
+          make test          
 
-      - name: Run Python tests with pytest
+      - name: test nemo extension
         working-directory: nemo-python
         env:
           PYTHONPATH: ${{ github.workspace }}/nemo-python/extensions
