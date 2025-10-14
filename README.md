@@ -1,11 +1,11 @@
 nemo-git-integration
 =====
 
-Integrate Git directly into the Nemo file explorer using context menus.
+Integrate Git directly into the Nemo file explorer via context menus. 
 
-This project brings Git functionality into Nemo, the file manager used in the Cinnamon (a GNOME Files fork, formerly Nautilus) desktop environment. 
+Perform common Git operations without opening a terminal or IDE. 
 
-It lets you perform common Git operations via right-click, without opening a terminal or IDE.
+Tested primarily on Linux Mint Debian Edition.
 
 ![](docs/Screenshot%20from%202025-10-14%2015-15-14.png)
 
