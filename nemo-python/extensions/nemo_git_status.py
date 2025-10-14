@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 import logging
-import os
 import re
 import subprocess
-import time
 import threading
+import time
 from typing import Dict, Optional
-from urllib import parse
+
 from gi.repository import Nemo, GObject
 
 CACHE_TTL = 3  # seconds
@@ -87,10 +86,9 @@ def parse_porcelain_status(lines):
     """
     Parse `git status --porcelain[=v2] --branch` output into per-file status.
 
-    Supports both porcelain v1 and v2 formats:
-    - ?? path              → untracked
-    - M, A, D, R, C path   → dirty
-    - 1/2/u entries in v2  → dirty
+    Returns a dict mapping file paths to status:
+      - 'dirty' for modified/staged files
+      - 'untracked' for untracked files
     """
     status_map = {}
 
@@ -99,30 +97,61 @@ def parse_porcelain_status(lines):
         if not line or line.startswith("#"):
             continue
 
-        # Untracked files (??)
-        if line.startswith("?? "):
-            status_map[line[3:].strip()] = "untracked"
-            continue
-
-        # Porcelain v2: 1 <xy> ... path
-        if line[0] in ("1", "2", "u"):
-            parts = line.split()
-            if len(parts) >= 2:
-                path = parts[-1]
-                status_map[path] = "dirty"
-            continue
-
-        # Porcelain v1: M A D R C ? codes in first column
-        code = line[0]
-        if code in ("M", "A", "D", "R", "C"):
-            # skip status marker and space
-            if len(line) > 2:
-                status_map[line[2:].strip()] = "dirty"
-        elif code == "?":
-            if len(line) > 2:
-                status_map[line[2:].strip()] = "untracked"
+        # Try each parser until one returns a result
+        for parser in (parse_untracked, parse_porcelain_v2, parse_porcelain_v1):
+            path, status = parser(line)
+            if path:
+                status_map[path] = status
+                break
 
     return status_map
+
+
+# ---------------------------
+# Format-specific parsers
+# ---------------------------
+
+def parse_untracked(line):
+    """Parse untracked files (porcelain v1: '?? path')."""
+
+    if line.startswith("??"):
+        path = line[2:].lstrip()  # remove the leading ?? and any whitespace
+        return path, "untracked"
+    return None, None
+
+
+def parse_porcelain_v2(line):
+    """
+    Parse porcelain v2 entries:
+      - 1 <xy> ... path
+      - 2 <xy> ... path
+      - u <xy> ... path
+    Returns (path, 'dirty') or (None, None) if not v2.
+    """
+    if line[0] in ("1", "2", "u"):
+        parts = line.split()
+        if len(parts) >= 2:
+            return parts[-1], "dirty"
+    return None, None
+
+
+def parse_porcelain_v1(line):
+    """
+    Parse porcelain v1 single-character codes:
+      - M, A, D, R, C → dirty
+      - ? → untracked
+    Ignore lines starting with '??' (handled by parse_untracked)
+    """
+    if not line or line.startswith("??"):
+        return None, None
+    if len(line) > 2:
+        code = line[0]
+        path = line[2:].strip()
+        if code in ("M", "A", "D", "R", "C"):
+            return path, "dirty"
+        if code == "?":
+            return path, "untracked"
+    return None, None
 
 
 def resolve_repo_root(path: str) -> Optional[str]:
@@ -139,6 +168,7 @@ def resolve_repo_root(path: str) -> Optional[str]:
 
 from urllib.parse import urlparse, unquote
 import os
+
 
 def uri_to_path(uri: str):
     """
@@ -182,8 +212,6 @@ def uri_to_path(uri: str):
     return decoded
 
 
-
-
 def should_skip(path: str) -> bool:
     return bool(re.search(r"(^|/)\.git(/|$)", path.replace("\\", "/")))
 
@@ -194,6 +222,7 @@ def should_skip(path: str) -> bool:
 
 class GitCache:
     """Thread-safe TTL cache for repo info."""
+
     def __init__(self):
         self._lock = threading.Lock()
         self._data: Dict[str, tuple[float, dict]] = {}
