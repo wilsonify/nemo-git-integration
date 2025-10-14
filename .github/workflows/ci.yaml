@@ -26,6 +26,7 @@ jobs:
 
       - name: Run Bats tests
         run: |
+          sudo true
           make test          
 
       - name: test nemo extension
