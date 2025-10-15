@@ -39,6 +39,14 @@ Ensure the following directories and files exist:
 ls ~/.local/share/nemo/actions/
 ls ~/.local/share/nemo-python/extensions/
 
+In Nemo, enable or disable extension via:  
+
+**Edit → Plugins**
+
+You should see **Nemo Git Integration** (or `nemo-git-status`) in the extension list.
+
+![](docs/img2.png)
+
 Enable the extension in Nemo:
 
     Open Nemo → Edit → Plugins
@@ -98,4 +106,12 @@ Configure Git user in the workflow:
 | Scripts not visible in Nemo	                                                             | Verify nemo-python installed and files exist in ~/.local/share/nemo-python/extensions/ |
 | Git commands fail in scripts	                                                           | Check Git user identity (git config) and permissions                                   | 
 | Zenity dialogs fail	                                                                     | Ensure zenity is installed and executable in $PATH                                     |
-| CI tests fail	 | Make sure the CI runner sets Git user/email and HOME environment correctly | 
+| CI tests fail	 | Make sure the CI runner sets Git user/email and HOME environment correctly |
+
+
+- **scripts not visible**:  
+  Ensure `nemo-python` is installed and the scripts files exist in the correct directory:
+
+```bash
+ls ~/.local/share/nemo-python/extensions/
+```
