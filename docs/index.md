@@ -1,5 +1,3 @@
-Nemo Git Integration
-=====
 
 Integrate Git directly into the **Nemo File Manager** using context menus and extension columns.  
 Perform common Git operations via right-click without opening a terminal or IDE.  
