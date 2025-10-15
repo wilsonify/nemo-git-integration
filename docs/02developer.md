@@ -1,4 +1,5 @@
-# Nemo Git Integration – Developer Guide
+Developer Guide
+=====
 
 This guide is for developers who want to understand, modify, and test the **Nemo Git Integration** scripts and extensions.
 

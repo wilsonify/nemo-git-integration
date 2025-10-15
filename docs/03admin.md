@@ -1,4 +1,5 @@
-# Nemo Git Integration – Administrator Guide
+Administrator Guide
+=====
 
 This guide covers administrative tasks, system setup, and configuration for **Nemo Git Integration**.
 
