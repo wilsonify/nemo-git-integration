@@ -43,7 +43,7 @@ install_files() {
 
   log "Installed Nemo Git Integration files."
 
-  log "Start Installing Nemo Git Status scripts"
+  log "Start Installing Nemo Git Status extension"
 
   EXT_DIR="$HOME/.local/share/nemo-python/extensions"
   echo "[INFO] Installing nemo_git_status to $EXT_DIR"
@@ -55,7 +55,7 @@ install_files() {
   nohup nemo >/dev/null 2>&1 &
   echo "[INFO] Installation complete!"
   echo "[INFO] Manage extensions in Nemo: Edit -> Plugins"
-  log "Done Installing Nemo Git Status scripts"
+  log "Done Installing Nemo Git Status extension"
 }
 
 main() {
