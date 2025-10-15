@@ -35,23 +35,6 @@ make uninstall  # Removes installed actions
 
 Each action is accessed by right-clicking files or folders in Nemo.
 
-## Project Structure
-
-```
-.
-├── icons/                 # PNG icons and README for visual enhancements
-├── nemo/                 # Contains .nemo_action files for context menu integration
-│   └── actions/          # Each file corresponds to a specific Git operation
-├── nemo-git-integration/ # Backing scripts grouped by CRUD-like categories
-│   ├── s01-create/       # Scripts for repo creation (init, clone, branch)
-│   ├── s02-read/         # Scripts for reading repo state (status, log, fetch)
-│   ├── s03-update/       # Scripts for updating (pull, add, commit, push)
-│   └── s04-delete/       # Scripts for undoing changes (reset, uninit, etc.)
-├── tests/                # Bats-compatible test scripts for integration logic
-├── makefile              # Install/uninstall .nemo_action files
-├── LICENSE               # Licensing information
-└── README.md             # This documentation
-```
 
 ## Features
 
