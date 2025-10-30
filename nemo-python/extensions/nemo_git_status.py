@@ -23,57 +23,54 @@ logging.basicConfig(
 
 def run_git(repo_root: str) -> Optional[dict]:
     """
-    Run a single composite git command to fetch:
-      - current branch or detached commit
-      - origin URL
-      - full status (porcelain v2)
+    Run git commands to fetch repository information.
     Returns dict or None if repo invalid.
     """
     if not repo_root or not os.path.isdir(repo_root):
         return None
 
-    cmd = [
-        "bash", "-c",
-        (
-            "set -e;"
-            "branch=$(git -C \"$1\" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '');"
-            "if [ \"$branch\" = 'HEAD' ]; then "
-            "  branch=\"detached@$(git -C \"$1\" rev-parse --short HEAD 2>/dev/null || echo '')\";"
-            "fi;"
-            "origin=$(git -C \"$1\" remote get-url origin 2>/dev/null || echo '');"
-            "status=$(git -C \"$1\" status --porcelain=v2 --branch 2>/dev/null || true);"
-            "echo \"$branch\";"
-            "echo '<<<ORIGIN>>>';"
-            "echo \"$origin\";"
-            "echo '<<<STATUS>>>';"
-            "echo \"$status\";"
-        ),
-        "_", repo_root
-    ]
-
     try:
-        output = subprocess.check_output(
-            cmd, stderr=subprocess.DEVNULL, text=True, timeout=GIT_TIMEOUT
-        )
+        # Get branch information
+        branch_cmd = ["git", "-C", repo_root, "rev-parse", "--abbrev-ref", "HEAD"]
+        try:
+            branch = subprocess.check_output(
+                branch_cmd, stderr=subprocess.DEVNULL, text=True, timeout=GIT_TIMEOUT
+            ).strip()
+        except subprocess.SubprocessError:
+            branch = ""
+        
+        # Handle detached HEAD
+        if branch == "HEAD":
+            try:
+                commit_hash = subprocess.check_output(
+                    ["git", "-C", repo_root, "rev-parse", "--short", "HEAD"],
+                    stderr=subprocess.DEVNULL, text=True, timeout=GIT_TIMEOUT
+                ).strip()
+                branch = f"detached@{commit_hash}"
+            except subprocess.SubprocessError:
+                branch = "detached"
+        
+        # Get origin URL
+        try:
+            origin = subprocess.check_output(
+                ["git", "-C", repo_root, "remote", "get-url", "origin"],
+                stderr=subprocess.DEVNULL, text=True, timeout=GIT_TIMEOUT
+            ).strip()
+        except subprocess.SubprocessError:
+            origin = ""
+        
+        # Get status information
+        try:
+            status_output = subprocess.check_output(
+                ["git", "-C", repo_root, "status", "--porcelain=v2", "--branch"],
+                stderr=subprocess.DEVNULL, text=True, timeout=GIT_TIMEOUT
+            )
+            status_lines = status_output.splitlines()
+        except subprocess.SubprocessError:
+            status_lines = []
+        
     except subprocess.SubprocessError:
         return None
-
-    # Parse sections
-    branch, origin, status_lines = "", "", []
-    section = "branch"
-    for line in output.splitlines():
-        if line == "<<<ORIGIN>>>":
-            section = "origin"
-            continue
-        elif line == "<<<STATUS>>>":
-            section = "status"
-            continue
-        if section == "branch":
-            branch = line.strip()
-        elif section == "origin":
-            origin = line.strip()
-        elif section == "status":
-            status_lines.append(line)
 
     return {
         "git_branch": branch,

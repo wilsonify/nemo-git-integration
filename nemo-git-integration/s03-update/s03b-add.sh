@@ -22,6 +22,11 @@ zenity --question --title="Git Add" --text="Add selected files to staging?" || e
 # Step 4: Run git add and collect output
 ADDED_FILES=""
 for file in "${SELECTED_FILES[@]}"; do
+  # Validate file path to prevent command injection (check for dangerous characters)
+  if [[ "$file" =~ \$ ]] || [[ "$file" =~ \` ]] || [[ "$file" =~ \| ]] || [[ "$file" =~ \; ]] || [[ "$file" =~ \& ]]; then
+    zenity --error --title="Invalid File Path" --text="Invalid file path detected:\n$file"
+    exit 1
+  fi
   if git add "$file" 2>/dev/null; then
     ADDED_FILES+="$file\n"
   else

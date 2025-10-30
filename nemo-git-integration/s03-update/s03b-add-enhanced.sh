@@ -35,6 +35,12 @@ declare -A repos_to_files
 declare -A failed_files
 
 for file in "${SELECTED_FILES[@]}"; do
+    # Validate file path to prevent command injection (check for dangerous characters)
+    if [[ "$file" =~ \$ ]] || [[ "$file" =~ \` ]] || [[ "$file" =~ \| ]] || [[ "$file" =~ \; ]] || [[ "$file" =~ \& ]]; then
+        failed_files["$file"]="Invalid file path: contains potentially dangerous characters"
+        continue
+    fi
+    
     if [ ! -e "$file" ]; then
         failed_files["$file"]="File does not exist"
         continue

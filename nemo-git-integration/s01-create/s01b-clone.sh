@@ -18,8 +18,17 @@ if [ -z "$REPO_URL" ]; then
   exit 1
 fi
 
-# Derive folder name from URL
-REPO_NAME=$(basename -s .git "$REPO_URL")
+# Validate repository URL format (basic validation)
+if [[ ! "$REPO_URL" =~ ^(https?|git|ssh):// ]] && [[ ! "$REPO_URL" =~ ^git@ ]] && [[ ! "$REPO_URL" =~ ^/ ]]; then
+  zenity --error --title="Invalid URL" --text="Invalid repository URL format:\n$REPO_URL"
+  exit 1
+fi
+
+# Derive folder name from URL (sanitized)
+REPO_NAME=$(basename -s .git "$REPO_URL" | tr -cd 'a-zA-Z0-9._-')
+if [ -z "$REPO_NAME" ]; then
+  REPO_NAME="repository"
+fi
 CLONE_PATH="$DEST/$REPO_NAME"
 
 # Check if the target folder already exists
@@ -28,7 +37,7 @@ if [ -e "$CLONE_PATH" ]; then
   exit 1
 fi
 
-# Perform clone
+# Perform clone with properly quoted arguments
 OUTPUT=$(git clone "$REPO_URL" "$CLONE_PATH" 2>&1)
 EXIT_CODE=$?
 

@@ -35,6 +35,12 @@ declare -A repos_to_files
 declare -A failed_files
 
 for file in "${SELECTED_FILES[@]}"; do
+    # Validate file path to prevent command injection (check for dangerous characters)
+    if [[ "$file" =~ \$ ]] || [[ "$file" =~ \` ]] || [[ "$file" =~ \| ]] || [[ "$file" =~ \; ]] || [[ "$file" =~ \& ]]; then
+        failed_files["$file"]="Invalid file path: contains potentially dangerous characters"
+        continue
+    fi
+    
     if [ ! -e "$file" ]; then
         failed_files["$file"]="File does not exist"
         continue
@@ -87,6 +93,9 @@ if [ -z "$COMMIT_MSG" ]; then
     zenity --warning --title="Empty Commit Message" --text="No commit message entered. Commit aborted."
     exit 1
 fi
+
+# Sanitize commit message to prevent command injection
+COMMIT_MSG=$(echo "$COMMIT_MSG" | tr -d '\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037\177')
 
 # Process each repository
 declare -A repo_results

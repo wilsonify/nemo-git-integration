@@ -23,6 +23,11 @@ fi
 
 # Stage the files
 for FILE in "${SELECTED_FILES[@]}"; do
+  # Validate file path to prevent command injection (check for dangerous characters)
+  if [[ "$FILE" =~ \$ ]] || [[ "$FILE" =~ \` ]] || [[ "$FILE" =~ \| ]] || [[ "$FILE" =~ \; ]] || [[ "$FILE" =~ \& ]]; then
+    zenity --error --title="Invalid File Path" --text="Invalid file path detected:\n$FILE"
+    exit 1
+  fi
   git add "$FILE"
 done
 
@@ -35,7 +40,10 @@ if [ -z "$COMMIT_MSG" ]; then
   exit 1
 fi
 
-# Commit the changes
+# Sanitize commit message to prevent command injection
+COMMIT_MSG=$(echo "$COMMIT_MSG" | tr -d '\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037\177')
+
+# Commit the changes with properly quoted arguments
 if git commit -m "$COMMIT_MSG"; then
   zenity --info --title="Commit Successful" --text="Your changes have been committed:\n\n$COMMIT_MSG"
 else
