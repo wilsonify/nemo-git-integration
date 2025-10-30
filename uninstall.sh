@@ -17,12 +17,12 @@ LAYOUT_FILE="${CONFIG_DIR}/actions-tree.json"
 log() { echo "[INFO] $*"; }
 error() { echo "[ERROR] $*" >&2; exit 1; }
 
-rm -f "$ICONS_DIR"/* "$NEMO_ACTIONS_DIR"/* "$LAYOUT_FILE" || true
+rm -rf "$ICONS_DIR"/* "$NEMO_ACTIONS_DIR"/* "$LAYOUT_FILE" || true
 log "Removed installed Nemo Git Integration files."
 log "Start uninstalling Nemo Git Status extension"
 log "Uninstalling Nemo extension: nemo_git_status"
 rm -f "$HOME/.local/share/nemo-python/extensions/nemo_git_status.py"
-rm -f "$HOME/.local/share/nemo-python/extensions/__pycache__"
+rm -rf "$HOME/.local/share/nemo-python/extensions/__pycache__"
 log "Restarting Nemo..."
 nemo -q || true
 nohup nemo >/dev/null 2>&1 &

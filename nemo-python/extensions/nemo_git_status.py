@@ -242,6 +242,33 @@ class GitCache:
 cache = GitCache()
 
 
+def get_overall_repo_status(file_status_map: dict) -> str:
+    """
+    Determine the overall status of a repository based on all file statuses.
+    
+    Returns:
+      - 'dirty' if any files are modified/staged
+      - 'untracked' if there are untracked files (and no dirty files)
+      - 'clean' if repository is clean
+    """
+    has_dirty = False
+    has_untracked = False
+    
+    for status in file_status_map.values():
+        if status == "dirty":
+            has_dirty = True
+            break  # Dirty takes priority
+        elif status == "untracked":
+            has_untracked = True
+    
+    if has_dirty:
+        return "dirty"
+    elif has_untracked:
+        return "untracked"
+    else:
+        return "clean"
+
+
 def get_file_git_info(path: str) -> dict:
     if not path or should_skip(path):
         return {"git_repo": "", "git_branch": "", "git_status": ""}
@@ -259,8 +286,13 @@ def get_file_git_info(path: str) -> dict:
     else:
         info = cached
 
-    rel_path = os.path.relpath(path, repo_root)
-    status = info["file_status_map"].get(rel_path, "clean")
+    # If the path is the repository root directory, show overall repo status
+    if os.path.abspath(path) == os.path.abspath(repo_root):
+        status = get_overall_repo_status(info["file_status_map"])
+    else:
+        # For individual files, show their specific status
+        rel_path = os.path.relpath(path, repo_root)
+        status = info["file_status_map"].get(rel_path, "clean")
 
     return {
         "git_repo": info["git_repo"],
