@@ -7,8 +7,11 @@ Perform common Git operations without opening a terminal or IDE.
 
 Tested primarily on Linux Mint Debian Edition.
 
+Single Repo
 ![](docs/Screenshot%20from%202025-10-14%2015-15-14.png)
 
+Multi-Repo
+![alt text](<docs/Screenshot from 2025-10-30 09-26-24.png>)
 # Get Started 
 
 Ensure you're running **Debian** with **Cinnamon** as your window manager and **Nemo** as your file explorer.

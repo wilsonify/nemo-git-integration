@@ -7,7 +7,7 @@ from nemo_git_status import uri_to_path, should_skip
 # --------------------------
 
 @pytest.mark.parametrize("uri,expected", [
-    ("file:/home/user", None),
+    ("file:/home/user", "/home/user"),  # Valid according to RFC 8089
     ("file://", None),
     ("file:///", "/"),
     ("file:///tmp//double", "/tmp//double"),
