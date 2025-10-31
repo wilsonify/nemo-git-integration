@@ -3,7 +3,9 @@ pytest configuration and fixtures for nemo-git-integration tests
 """
 
 import sys
+
 import pytest
+
 
 # Create mock classes first
 class MockColumn:

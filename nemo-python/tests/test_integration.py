@@ -4,14 +4,14 @@ Integration tests for nemo_git_status.py
 Tests the complete workflow and interaction with real git repositories
 """
 
-import pytest
-import tempfile
-import os
 import subprocess
-from pathlib import Path
-
 # Mock the gi module for testing
 import sys
+import tempfile
+from pathlib import Path
+
+import pytest
+
 sys.modules['gi'] = type(sys)('gi')
 sys.modules['gi.repository'] = type(sys)('gi.repository')
 sys.modules['gi.repository.Nemo'] = type(sys)('Nemo')

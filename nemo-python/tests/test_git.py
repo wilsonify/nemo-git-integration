@@ -2,8 +2,8 @@ import os
 import subprocess
 import tempfile
 import time
-import pytest
 
+import pytest
 from nemo_git_status import (
     run_git,
     parse_porcelain_status,
