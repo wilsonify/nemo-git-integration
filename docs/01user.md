@@ -1,8 +1,11 @@
-User Guide
-====
+# User Guide
 
 This guide explains how to use **Nemo Git Integration** as an end-user.  
 It assumes you have **Nemo** (the Cinnamon file manager) installed.
+
+---
+
+![Screenshot from 2025-10-30 09-26-24.png](Screenshot%20from%202025-10-30%2009-26-24.png)
 
 ---
 

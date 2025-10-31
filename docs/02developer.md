@@ -7,9 +7,18 @@ It provides additional columns in the **List View** related to the Git status of
 
 This guide is for developers who want to understand, modify, and test the **Nemo Git Integration** actions and extensions.
 
+# 7. Contributing
+
+1. Open an Issue to discuss proposed changes.
+1. Fork the repository.
+1. Create a feature branch.
+1. Implement and test your changes.
+1. Commit and push your branch.
+1. Submit a Pull Request to the main repository.
+
 ---
 
-## Project Structure
+## 1. Project Structure
 
 ```
 .
@@ -29,131 +38,85 @@ This guide is for developers who want to understand, modify, and test the **Nemo
 └── README.md             # This documentation
 ```
 
----
+# 2. Development Quick Start
 
-## Installation for Development
-
-1. Clone the repository:
-
-```bash
+```
 git clone https://github.com/wilsonify/nemo-git-integration.git
 cd nemo-git-integration
-```
-
-2. Install dependencies (system + Python):
-
-```
-sudo apt-get update
-sudo apt-get install -y git zenity nemo-python python3-pip bats
-python3 -m pip install --upgrade pip pytest
-```
-
-3. Install the Nemo actions and extensions:
-
-```
+sudo apt-get install -y git zenity nemo-python bats
 make install
-```
-
-4. run the tests
-```
-make test          # Runs Bats tests in `tests/`
-```
-
-
-5. Python Tests (Nemo extension)
-
-```
-cd nemo-python
 export PYTHONPATH=$PWD/extensions
-pytest tests/
+make test-all
 ```
 
-# Script Development Guidelines
+# 3. Development Guidelines
 
+Scripts are organized into CRUD-style categories for clarity:
 
-Scripts are organized by CRUD-like categories:
+Category	Folder	Example Scripts
+Create	s01-create	init, clone, branch
+Read	s02-read	status, log, fetch
+Update	s03-update	pull, add, commit, push
+Delete	s04-delete	reset, uninit, unbranch
 
-* s01-create: init, clone, branch
-* s02-read: status, log, fetch
-* s03-update: pull, add, commit, push
-* s04-delete: reset, uninit, unbranch
+### 3.1 Zenity Dialogs
 
-Scripts use Zenity for dialogs; 
+Scripts use Zenity for user dialogs.
+To mock Zenity during testing:
 
-you can mock zenity in tests:
-```
+```commandline
 export PATH="$TEST_DIR:$PATH"
 echo '#!/bin/bash' > "$TEST_DIR/zenity"
 echo 'echo "[Zenity Mock] $@" >&2' >> "$TEST_DIR/zenity"
 chmod +x "$TEST_DIR/zenity"
 ```
 
-Caching of branch state uses ~/.cache/nemo_git_*.
+### 3.2 Caching
 
-# Nemo Extension Development
+Branch state is cached in: ```~/.cache/nemo_git_*```
 
-Python scripts in nemo-python/extensions/ define columns for Git repo, Git branch, and Git status.
 
-Use PYTHONPATH to include extensions/ for testing.
+# 4. Developing Nemo Extensions (Python)
 
-```
+The Python-based Nemo extensions add Git-related columns such as repository name, branch, and status.
+Reference: [Nemo source code on GitHub](https://github.com/linuxmint/nemo/tree/master/libnemo-extension)
+
+4.1 Key Interfaces from nemo-python
+
 from gi.repository import Nemo, GObject
+
+Nemo.ColumnProvider
+Nemo.InfoProvider
+Nemo.NameAndDescProvider
+
+
+Run Tests with Make:
 ```
-* Nemo.ColumnProvider
-* Nemo.InfoProvider
-* Nemo.NameAndDescProvider
+make test-all                # Shell + Python
+make test                    # Shell
+make test-python             # All Python tests
+make test-python-security    # Security-only tests
+make test-python-performance # Performance tests
+make test-python-unit        # Unit-only
+make test-python-integration # Integration tests
+```
 
-[nemo source code](https://github.com/linuxmint/nemo/tree/master/libnemo-extension)
 
-# Running in CI (GitHub Actions)
+# 6. Debugging
 
-Set Git user/email to avoid commit errors in temporary repos:
+### 6.1 Run Nemo in Debug Mode
 
+NEMO_DEBUG=Actions,Window nemo --debug
+
+### 6.2 Capture Zenity Logs
+
+export ZENITY_LOG=~/zenity_debug.log
+
+### Prevent commit errors by setting a Git identity
 ```
 git config --global user.name "CI Runner"
 git config --global user.email "ci@example.com"
 ```
-
-
-# Debugging
-
-Run Nemo with debug flags:
-```
-NEMO_DEBUG=Actions,Window nemo --debug
-```
-
-capture Zenity logs with:
-```
-export ZENITY_LOG=~/zenity_debug.log
-```
-
-
-Contributions are welcome! If you want to contribute to this project, follow these steps:
-
-1. Open an Issue so that it can be discussed in the open.
-2. Fork this repository.
-3. Create a new branch for your feature
-4. Make your changes
-5. commit them
-6. Push them
-7. Submit a pull request from your remote into my remote
-
-## Testing
-
-Scripts under `tests/` use [Bats](https://github.com/bats-core/bats-core) for shell testing. Each test corresponds to a script under `nemo-git-integration/`.
-
-```bash
-make dev # installs bats
-make test # bats tests/*
-```
-
-## Run Nemo in Debug Mode
-
-see nemo --help for more details
-```
-NEMO_DEBUG=Actions,Window nemo --debug
-```
-
 
 # Action Syntax Cheatsheet
 
@@ -190,8 +153,3 @@ adf: Action is available when one or more directories or files are selected.
 "$1" is the path to the current directory (%P in .nemo_action).
 
 "$@" handles the selected files (%F in .nemo_action).
-
-Uses zenity --question to confirm reset, which is destructive.
-
-Aggregates errors to show at the end if anything failed.
-
