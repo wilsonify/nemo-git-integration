@@ -28,7 +28,7 @@ Single Repo
 ![](docs/Screenshot%20from%202025-10-14%2015-15-14.png)
 
 Multi-Repo
-![](docs/Screenshot from 2025-10-30 09-26-24.png)
+![](docs/Screenshot%20from%202025-10-30%2009-26-24.png)
 
 # How to Contribute
 
