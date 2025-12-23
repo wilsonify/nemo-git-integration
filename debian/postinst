@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        # Update icon cache if available
+        if command -v update-icon-caches >/dev/null 2>&1; then
+            update-icon-caches /usr/share/icons/hicolor || true
+        fi
+        
+        # Restart nemo for all logged-in users (optional, non-fatal)
+        echo "Note: You may need to restart Nemo for changes to take effect."
+        echo "Run: nemo -q && nemo &"
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

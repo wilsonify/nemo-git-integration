@@ -1,0 +1,34 @@
+Source: nemo-git-integration
+Section: utils
+Priority: optional
+Maintainer: Thomas Wilson <wilsonify@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: https://github.com/wilsonify/nemo-git-integration
+Vcs-Browser: https://github.com/wilsonify/nemo-git-integration
+Vcs-Git: https://github.com/wilsonify/nemo-git-integration.git
+Rules-Requires-Root: no
+
+Package: nemo-git-integration
+Architecture: all
+Depends: ${misc:Depends},
+         nemo (>= 3.0),
+         git,
+         jq,
+         zenity,
+         coreutils,
+         sed,
+         findutils
+Recommends: python3-nemo
+Suggests: gitk, git-gui
+Description: Git integration for Nemo file manager
+ Integrate Git directly into the Nemo file explorer via context menus.
+ .
+ Perform common Git operations without opening a terminal or IDE:
+  - Initialize, clone, and manage branches
+  - View status, log, and fetch updates
+  - Pull, add, commit, and push changes
+  - Reset and undo operations
+ .
+ Tested primarily on Linux Mint Debian Edition and other
+ Debian-based distributions using Cinnamon/Nemo.

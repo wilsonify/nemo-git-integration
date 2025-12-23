@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+export DESTDIR = debian/nemo-git-integration
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	@echo "No build step required (shell scripts)"
+
+override_dh_auto_install:
+	# Create directory structure
+	install -d $(DESTDIR)/usr/share/nemo/actions
+	install -d $(DESTDIR)/usr/share/nemo-git-integration/s01-create
+	install -d $(DESTDIR)/usr/share/nemo-git-integration/s02-read
+	install -d $(DESTDIR)/usr/share/nemo-git-integration/s03-update
+	install -d $(DESTDIR)/usr/share/nemo-git-integration/s04-delete
+	install -d $(DESTDIR)/usr/share/nemo-python/extensions
+	install -d $(DESTDIR)/usr/share/icons/hicolor/scalable/apps
+	install -d $(DESTDIR)/etc/xdg/nemo/actions
+	
+	# Install nemo actions (with system paths)
+	for f in nemo/actions/*.nemo_action; do \
+		sed 's|__HOME__/.local/share/nemo|/usr/share/nemo|g' "$$f" > $(DESTDIR)/usr/share/nemo/actions/$$(basename "$$f"); \
+	done
+	
+	# Install shell scripts
+	install -m 755 nemo-git-integration/s01-create/*.sh $(DESTDIR)/usr/share/nemo-git-integration/s01-create/
+	install -m 755 nemo-git-integration/s02-read/*.sh $(DESTDIR)/usr/share/nemo-git-integration/s02-read/
+	install -m 755 nemo-git-integration/s03-update/*.sh $(DESTDIR)/usr/share/nemo-git-integration/s03-update/
+	install -m 755 nemo-git-integration/s04-delete/*.sh $(DESTDIR)/usr/share/nemo-git-integration/s04-delete/
+	
+	# Install Python extension
+	install -m 644 nemo-python/extensions/nemo_git_status.py $(DESTDIR)/usr/share/nemo-python/extensions/
+	
+	# Install actions tree config
+	install -m 644 .config/nemo/actions/actions-tree.json $(DESTDIR)/etc/xdg/nemo/actions/
+	
+	# Install icons (if any exist)
+	-cp -r icons/* $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/ 2>/dev/null || true
+
+override_dh_auto_test:
+	@echo "Skipping tests during package build"

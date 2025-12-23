@@ -1,0 +1,10 @@
+nemo-git-integration (1.0.0-1) unstable; urgency=medium
+
+  * Initial release
+  * Git context menu integration for Nemo file manager
+  * Support for init, clone, branch, status, log, fetch operations
+  * Support for pull, add, commit, push operations
+  * Support for reset, uninit, unclone, unpull, unadd, uncommit, unpush
+  * Python extension for git status column in Nemo
+
+ -- Thomas Wilson <wilsonify@users.noreply.github.com>  Mon, 23 Dec 2024 12:00:00 +0000

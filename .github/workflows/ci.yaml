@@ -1,26 +1,41 @@
-name: Continuous Integration
+name: CI/CD Pipeline
 
 on:
   workflow_dispatch:
   pull_request:
-    branches: [ main ]
-    types: [ synchronize ]
+    branches: [main, master]
+  push:
+    branches: [main, master]
+    tags:
+      - 'v*'
+
+env:
+  PACKAGE_NAME: nemo-git-integration
 
 jobs:
-  bats-and-pytests:
+  # ============================================================
+  # STAGE 1: Test (runs on all PRs and pushes)
+  # ============================================================
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zenity nemo-python python3-pip bats
+          sudo apt-get install -y git zenity nemo-python python3-pip bats jq
 
       - name: Set up Python environment
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install pytest
@@ -37,3 +52,112 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}/nemo-python/extensions
         run: make test-all
+
+      - name: Run Python tests
+        run: |
+          python -m pytest nemo-python/tests/ -v --tb=short
+
+  # ============================================================
+  # STAGE 2: Build Debian Package (runs on all PRs and pushes)
+  # ============================================================
+  build:
+    name: Build Package (${{ matrix.os }})
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev debhelper devscripts fakeroot lintian
+
+      - name: Build Debian package
+        run: |
+          dpkg-buildpackage -us -uc -b
+
+      - name: Run lintian (package quality check)
+        run: |
+          lintian ../nemo-git-integration_*.deb || true
+
+      - name: Test package installation
+        run: |
+          sudo apt-get install -y nemo git jq zenity
+          sudo dpkg -i ../nemo-git-integration_*.deb || true
+          sudo apt-get install -f -y
+
+      - name: Verify installation
+        run: |
+          test -d /usr/share/nemo-git-integration
+          test -f /usr/share/nemo-python/extensions/nemo_git_status.py
+          ls -la /usr/share/nemo/actions/
+
+      - name: Test package removal
+        run: |
+          sudo dpkg -r nemo-git-integration
+
+      - name: Upload deb artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: debian-package-${{ matrix.os }}
+          path: ../nemo-git-integration_*.deb
+          retention-days: 30
+
+  # ============================================================
+  # STAGE 3: Sign and Release (only on version tags)
+  # ============================================================
+  sign-and-release:
+    name: Sign & Publish Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release files
+        run: |
+          mkdir -p release
+          find artifacts -name "*.deb" -exec cp {} release/ \;
+          ls -la release/
+
+      - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "GPG key imported successfully"
+
+      - name: Sign packages with GPG
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}          
+        run: |
+          cd release
+          for deb in *.deb; do
+            echo "Signing $deb..."
+            gpg --batch --yes --pinentry-mode loopback \
+                --passphrase "$GPG_PASSPHRASE" \
+                --default-key "$GPG_KEY_ID" \
+                --armor --detach-sign "$deb"
+          done
+          # Create checksums
+          sha256sum *.deb > SHA256SUMS
+          gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "$GPG_PASSPHRASE" \
+              --default-key "$GPG_KEY_ID" \
+              --clearsign SHA256SUMS
+          mv SHA256SUMS.asc SHA256SUMS.gpg
+          generate_release_notes: true
+
+          

@@ -9,6 +9,29 @@ Tested primarily on Linux Mint Debian Edition.
 
 # Get Started 
 
+### Debian/Ubuntu (Recommended)
+
+Download the latest `.deb` from [Releases](https://github.com/wilsonify/nemo-git-integration/releases):
+
+```bash
+# Download and install
+wget https://github.com/wilsonify/nemo-git-integration/releases/latest/download/nemo-git-integration_1.0.0-1_all.deb
+sudo dpkg -i nemo-git-integration_*.deb
+sudo apt-get install -f  # Fix dependencies if needed
+```
+
+### Build from Source
+
+```bash
+git clone https://github.com/wilsonify/nemo-git-integration.git
+cd nemo-git-integration
+make dev-deps     # Install build dependencies
+make deb          # Build .deb package
+make deb-install  # Install
+```
+
+### User-only Installation (No Root)
+
 Ensure you're running **Debian** with **Cinnamon** as your window manager and **Nemo** as your file explorer.
 
 [Documentation](https://wilsonify.github.io/nemo-git-integration/)
@@ -17,6 +40,8 @@ Ensure you're running **Debian** with **Cinnamon** as your window manager and **
 make install    # Copies *.nemo_action files to the ~/.local/share/nemo/actions folder
 make uninstall  # Removes installed actions
 ```
+
+See [BUILDING.md](BUILDING.md) for detailed build and packaging instructions.
 
 # Usage
 
