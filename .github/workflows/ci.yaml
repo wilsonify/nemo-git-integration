@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@v4
 
       - name: Install system dependencies
         run: |
@@ -31,7 +31,7 @@ jobs:
           sudo apt-get install -y git zenity nemo-python python3-pip bats jq
 
       - name: Set up Python environment
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -54,6 +54,8 @@ jobs:
         run: make test-all
 
       - name: Run Python tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}/nemo-python/extensions
         run: |
           python -m pytest nemo-python/tests/ -v --tb=short
 
@@ -70,7 +72,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: |
@@ -102,7 +104,7 @@ jobs:
           sudo dpkg -r nemo-git-integration
 
       - name: Upload deb artifact
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: debian-package-${{ matrix.os }}
           path: ../nemo-git-integration_*.deb

@@ -31,7 +31,7 @@ EOF
 }
 
 teardown() {
-  rm -rf "$TEST_DIR"
+  /bin/rm -rf "$TEST_DIR"
 }
 
 @test "successfully uninitializes a Git repo" {
@@ -78,12 +78,16 @@ EOF
 }
 
 @test "shows error if .git removal fails" {
-  chmod -w "$TEST_DIR/.git"  # simulate permission error
+  # Mock rm to simulate failure (works even as root, unlike chmod)
+  cat <<'EOF' > "$TEST_DIR/rm"
+#!/bin/bash
+echo "[rm Mock] $@" >> "$ZENITY_LOG"
+exit 1  # Simulate rm failure
+EOF
+  chmod +x "$TEST_DIR/rm"
 
   run "$SCRIPT" "$TEST_DIR"
   [ "$status" -ne 0 ]
 
   run grep -- "Git Uninit Failed" "$ZENITY_LOG"
-
-  chmod +w "$TEST_DIR/.git"  # cleanup permissions
 }

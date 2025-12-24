@@ -2,9 +2,15 @@
 pytest configuration and fixtures for nemo-git-integration tests
 """
 
+import os
 import sys
 
 import pytest
+
+# Add the extensions directory to sys.path so nemo_git_status can be imported
+extensions_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'extensions')
+if extensions_dir not in sys.path:
+    sys.path.insert(0, extensions_dir)
 
 
 # Create mock classes first
