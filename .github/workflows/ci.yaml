@@ -103,11 +103,17 @@ jobs:
         run: |
           sudo dpkg -r nemo-git-integration
 
+      - name: Copy artifacts to workspace
+        run: |
+          cp ../nemo-git-integration_*.deb .
+          cp ../nemo-git-integration_*.buildinfo . 2>/dev/null || true
+          cp ../nemo-git-integration_*.changes . 2>/dev/null || true
+
       - name: Upload deb artifact
         uses: actions/upload-artifact@v4
         with:
           name: debian-package-${{ matrix.os }}
-          path: ../nemo-git-integration_*.deb
+          path: nemo-git-integration_*.deb
           retention-days: 30
 
   # ============================================================
