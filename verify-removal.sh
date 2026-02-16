@@ -14,6 +14,9 @@
 #   1 - Some files still remain
 #
 
+# Note: We use 'set -uo pipefail' without 'set -e' intentionally.
+# This allows the script to continue checking all locations even if individual
+# checks fail, providing a complete verification report.
 set -uo pipefail
 
 # Color codes for output

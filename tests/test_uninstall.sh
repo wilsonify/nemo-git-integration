@@ -31,7 +31,8 @@ teardown() {
   # Create dummy extension file to simulate installed state
   touch "$HOME/.local/share/nemo-python/extensions/nemo_git_status.py"
   mkdir -p "$HOME/.local/share/nemo-python/extensions/__pycache__"
-  touch "$HOME/.local/share/nemo-python/extensions/__pycache__/nemo_git_status.cpython-310.pyc"
+  # Create bytecode file without hardcoding Python version
+  touch "$HOME/.local/share/nemo-python/extensions/__pycache__/nemo_git_status.pyc"
   
   run ./uninstall.sh
   [ "$status" -eq 0 ]

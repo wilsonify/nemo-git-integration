@@ -207,6 +207,12 @@ cleanup_system() {
     # Clear user caches for all logged-in users
     if command -v who >/dev/null 2>&1; then
         who | awk '{print $1}' | sort -u | while read -r user; do
+            # Validate username: only allow alphanumeric, underscore, hyphen
+            if ! echo "$user" | grep -qE '^[a-zA-Z0-9_-]+$'; then
+                log_warn "Skipping invalid username: $user"
+                continue
+            fi
+            
             user_home=$(getent passwd "$user" 2>/dev/null | cut -d: -f6)
             if [ -n "$user_home" ] && [ -d "$user_home/.cache/nemo" ]; then
                 rm -rf "$user_home/.cache/nemo"
@@ -251,10 +257,15 @@ main() {
             cleanup_system
             # Try to restart Nemo for the user who invoked sudo
             if [ -n "${SUDO_USER:-}" ]; then
-                log_info "Attempting to restart Nemo for user: $SUDO_USER"
-                # Preserve the user's DISPLAY environment variable
-                SUDO_USER_DISPLAY=$(su - "$SUDO_USER" -c 'echo $DISPLAY' 2>/dev/null || echo ":0")
-                su - "$SUDO_USER" -c "nemo -q 2>/dev/null || true; sleep 2; DISPLAY=${SUDO_USER_DISPLAY} nohup nemo >/dev/null 2>&1 &" || true
+                # Validate SUDO_USER: only allow alphanumeric, underscore, hyphen
+                if ! echo "$SUDO_USER" | grep -qE '^[a-zA-Z0-9_-]+$'; then
+                    log_warn "Invalid SUDO_USER value, skipping Nemo restart"
+                else
+                    log_info "Attempting to restart Nemo for user: $SUDO_USER"
+                    # Preserve the user's DISPLAY environment variable
+                    SUDO_USER_DISPLAY=$(su - "$SUDO_USER" -c 'echo $DISPLAY' 2>/dev/null || echo ":0")
+                    su - "$SUDO_USER" -c "nemo -q 2>/dev/null || true; sleep 2; DISPLAY=${SUDO_USER_DISPLAY} nohup nemo >/dev/null 2>&1 &" || true
+                fi
             fi
             ;;
         all)

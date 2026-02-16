@@ -69,6 +69,12 @@ clear_nemo_caches() {
     # This is a best-effort approach; user caches are primarily their responsibility
     if command -v who >/dev/null 2>&1; then
         who | awk '{print $1}' | sort -u | while read -r user; do
+            # Validate username: only allow alphanumeric, underscore, hyphen
+            if ! echo "$user" | grep -qE '^[a-zA-Z0-9_-]+$'; then
+                log_info "Skipping invalid username: $user"
+                continue
+            fi
+            
             user_home=$(getent passwd "$user" 2>/dev/null | cut -d: -f6)
             if [ -n "$user_home" ] && [ -d "$user_home" ]; then
                 # Clear user's Nemo cache
