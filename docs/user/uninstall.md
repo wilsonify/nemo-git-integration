@@ -1,8 +1,13 @@
+---
+layout: default
+title: Uninstall and Cleanup
+parent: User Guide
+nav_order: 1
+---
+
 # Uninstall and Cleanup Guide
 
 This guide provides detailed instructions for completely removing nemo-git-integration from your system.
-
-← [Back to User Guide](../user.md)
 
 ## Table of Contents
 

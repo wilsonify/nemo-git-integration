@@ -1,3 +1,10 @@
+---
+layout: default
+title: Developer Guide
+nav_order: 4
+has_children: true
+---
+
 # Developer Guide
 
 This extension is designed for the **Nemo File Manager**.

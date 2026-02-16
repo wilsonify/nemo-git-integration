@@ -1,8 +1,13 @@
+---
+layout: default
+title: GPG Signing Setup
+parent: Developer Guide
+nav_order: 2
+---
+
 # GPG Signing Setup for Releases
 
 This guide explains how to set up GPG signing for nemo-git-integration releases, allowing users to verify that builds are authentically from you.
-
-← [Back to Developer Guide](../developer.md)
 
 ## Overview
 

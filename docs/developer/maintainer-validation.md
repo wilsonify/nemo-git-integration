@@ -1,8 +1,13 @@
+---
+layout: default
+title: Maintainer Validation
+parent: Developer Guide
+nav_order: 3
+---
+
 # Maintainer Validation Checklist - Uninstall Cleanup Fix
 
 This document provides step-by-step validation procedures for maintainers to confirm the uninstall cleanup improvements work correctly.
-
-← [Back to Developer Guide](../developer.md)
 
 ## Summary of Changes
 

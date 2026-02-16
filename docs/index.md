@@ -1,3 +1,9 @@
+---
+layout: home
+title: Home
+nav_order: 1
+---
+
 # Nemo Git Integration
 
 Integrate Git directly into the Nemo file explorer via context menus.
@@ -28,13 +34,13 @@ make install
 
 ## Documentation
 
-- [User Guide](user.md) - Installation and usage
-- [Developer Guide](developer.md) - Development and contributing
-- [Administrator Guide](admin.md) - System administration
-- [User/Uninstall](user/uninstall.md) - Complete uninstallation instructions
-- [Developer/Building](developer/building.md) - Test suite documentation
-- [Developer/GPG Signing](developer/gpg-signing.md) - GPG signing process
-- [Developer/Maintainer Validation](developer/maintainer-validation.md) - Maintainer validation
+- [User Guide]({% link user.md %}) - Installation and usage
+- [Administrator Guide]({% link admin.md %}) - System administration
+- [Developer Guide]({% link developer.md %}) - Development and contributing
+  - [Building & Installation]({% link developer/building.md %}) - Build and test suite
+  - [GPG Signing]({% link developer/gpg-signing.md %}) - GPG signing process
+  - [Maintainer Validation]({% link developer/maintainer-validation.md %}) - Maintainer validation
+- [Uninstall Guide]({% link user/uninstall.md %}) - Complete uninstallation instructions
 
 ## Requirements
 

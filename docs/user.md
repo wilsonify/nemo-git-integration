@@ -1,3 +1,10 @@
+---
+layout: default
+title: User Guide
+nav_order: 2
+has_children: true
+---
+
 # User Guide
 
 This guide explains how to use **Nemo Git Integration** as an end-user.  

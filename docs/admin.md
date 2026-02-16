@@ -1,3 +1,9 @@
+---
+layout: default
+title: Administrator Guide
+nav_order: 3
+---
+
 # Administrator Guide
 
 This guide covers administrative tasks, system setup, and configuration for **Nemo Git Integration**.
