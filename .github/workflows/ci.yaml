@@ -167,4 +167,21 @@ jobs:
               --clearsign SHA256SUMS
           mv SHA256SUMS.asc SHA256SUMS.gpg
 
+      - name: List release artifacts
+        run: |
+          echo "=== Release artifacts ready for upload ==="
+          ls -lh release/
+          echo "=========================================="
+
+      - name: Create GitHub Release and Upload Assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd release
+          gh release create ${{ github.ref_name }} \
+            --repo ${{ github.repository }} \
+            --title "${{ github.ref_name }}" \
+            --generate-notes \
+            *.deb *.asc SHA256SUMS.gpg
+
 
