@@ -1,13 +1,12 @@
-Developer Guide
-=====
+# Developer Guide
 
-This extension is designed for the **Nemo File Manager**. 
+This extension is designed for the **Nemo File Manager**.
 
 It provides additional columns in the **List View** related to the Git status of files.
 
 This guide is for developers who want to understand, modify, and test the **Nemo Git Integration** actions and extensions.
 
-# 7. Contributing
+## 7. Contributing
 
 1. Open an Issue to discuss proposed changes.
 1. Fork the repository.
@@ -38,7 +37,7 @@ This guide is for developers who want to understand, modify, and test the **Nemo
 └── README.md             # This documentation
 ```
 
-# 2. Development Quick Start
+## 2. Development Quick Start
 
 ```
 git clone https://github.com/wilsonify/nemo-git-integration.git
@@ -49,15 +48,15 @@ export PYTHONPATH=$PWD/extensions
 make test-all
 ```
 
-# 3. Development Guidelines
+## 3. Development Guidelines
 
 Scripts are organized into CRUD-style categories for clarity:
 
-Category	Folder	Example Scripts
-Create	s01-create	init, clone, branch
-Read	s02-read	status, log, fetch
-Update	s03-update	pull, add, commit, push
-Delete	s04-delete	reset, uninit, unbranch
+Category Folder Example Scripts
+Create s01-create init, clone, branch
+Read s02-read status, log, fetch
+Update s03-update pull, add, commit, push
+Delete s04-delete reset, uninit, unbranch
 
 ### 3.1 Zenity Dialogs
 
@@ -75,8 +74,7 @@ chmod +x "$TEST_DIR/zenity"
 
 Branch state is cached in: ```~/.cache/nemo_git_*```
 
-
-# 4. Developing Nemo Extensions (Python)
+## 4. Developing Nemo Extensions (Python)
 
 The Python-based Nemo extensions add Git-related columns such as repository name, branch, and status.
 Reference: [Nemo source code on GitHub](https://github.com/linuxmint/nemo/tree/master/libnemo-extension)
@@ -89,9 +87,9 @@ Nemo.ColumnProvider
 Nemo.InfoProvider
 Nemo.NameAndDescProvider
 
-
 Run Tests with Make:
-```
+
+```bash
 make test-all                # Shell + Python
 make test                    # Shell
 make test-python             # All Python tests
@@ -101,8 +99,7 @@ make test-python-unit        # Unit-only
 make test-python-integration # Integration tests
 ```
 
-
-# 6. Debugging
+## 6. Debugging
 
 ### 6.1 Run Nemo in Debug Mode
 
@@ -113,12 +110,13 @@ NEMO_DEBUG=Actions,Window nemo --debug
 export ZENITY_LOG=~/zenity_debug.log
 
 ### Prevent commit errors by setting a Git identity
+
 ```
 git config --global user.name "CI Runner"
 git config --global user.email "ci@example.com"
 ```
 
-# Action Syntax Cheatsheet
+## Action Syntax Cheatsheet
 
 Some useful nemo_action stuff to help understand the code
 
@@ -148,7 +146,7 @@ ad: Action is available when one or more directories are selected.
 
 adf: Action is available when one or more directories or files are selected.
 
-# Explanation
+## Explanation
 
 "$1" is the path to the current directory (%P in .nemo_action).
 

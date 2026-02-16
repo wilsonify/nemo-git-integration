@@ -5,11 +5,13 @@ This document provides step-by-step validation procedures for maintainers to con
 ## Summary of Changes
 
 ### Files Modified
+
 1. **`debian/postrm`** - Complete rewrite with proper cleanup logic
 2. **`uninstall.sh`** - Improved to be selective and comprehensive
 3. **`tests/test_uninstall.sh`** - Enhanced test coverage
 
 ### Files Added
+
 1. **`verify-removal.sh`** - Verification script to check complete removal
 2. **`cleanup-all.sh`** - Comprehensive cleanup for both user and system installations
 3. **`docs/UNINSTALL.md`** - Complete uninstallation guide
@@ -56,6 +58,7 @@ ls ~/.config/nemo/actions/actions-tree.json
 ```
 
 **Expected Result**:
+
 - Step 2: All files should exist
 - Step 4: Output should show "All nemo-git-integration files successfully removed!"
 
@@ -88,6 +91,7 @@ sudo ./verify-removal.sh
 ```
 
 **Expected Result**:
+
 - Step 3: All system files should exist
 - Step 5: Output should show "All nemo-git-integration files successfully removed!"
 
@@ -109,6 +113,7 @@ sudo ./verify-removal.sh
 ```
 
 **Expected Result**:
+
 - Step 3: Should report complete removal
 
 ### Test 4: Idempotency
@@ -133,6 +138,7 @@ sudo ./verify-removal.sh
 ```
 
 **Expected Result**:
+
 - No errors from any script
 - Final verification shows clean state
 
@@ -140,7 +146,8 @@ sudo ./verify-removal.sh
 
 **Purpose**: Verify Git menu items disappear after uninstall (manual test).
 
-**Prerequisites**: 
+**Prerequisites**:
+
 - Nemo file manager installed
 - Desktop environment running
 
@@ -167,6 +174,7 @@ nemo &
 ```
 
 **Expected Result**:
+
 - After step 2: Git menu items visible
 - After step 5: Git menu items NOT visible
 
@@ -198,6 +206,7 @@ rm ~/.local/share/nemo/actions/my-custom-action.nemo_action
 ```
 
 **Expected Result**:
+
 - Step 4: Custom files should still exist (not deleted)
 
 ### Test 7: System-Wide Cleanup (Requires Root)
@@ -218,6 +227,7 @@ sudo ./verify-removal.sh
 ```
 
 **Expected Result**:
+
 - Step 3: Should report complete removal
 
 ## Regression Testing

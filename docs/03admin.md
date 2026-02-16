@@ -65,7 +65,7 @@ Configuration
 
 Git User Identity
 
-Many scripts perform Git commits; 
+Many scripts perform Git commits;
 
 ensure Git is configured in the CI/user environment:
 
@@ -103,11 +103,10 @@ Configure Git user in the workflow:
 
 | Issue                                                                                    | Resolution                                                                             |
 |------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
-| Scripts not visible in Nemo	                                                             | Verify nemo-python installed and files exist in ~/.local/share/nemo-python/extensions/ |
-| Git commands fail in scripts	                                                           | Check Git user identity (git config) and permissions                                   | 
-| Zenity dialogs fail	                                                                     | Ensure zenity is installed and executable in $PATH                                     |
-| CI tests fail	 | Make sure the CI runner sets Git user/email and HOME environment correctly |
-
+| Scripts not visible in Nemo                                                              | Verify nemo-python installed and files exist in ~/.local/share/nemo-python/extensions/ |
+| Git commands fail in scripts                                                            | Check Git user identity (git config) and permissions                                   |
+| Zenity dialogs fail                                                                      | Ensure zenity is installed and executable in $PATH                                     |
+| CI tests fail  | Make sure the CI runner sets Git user/email and HOME environment correctly |
 
 - **scripts not visible**:  
   Ensure `nemo-python` is installed and the scripts files exist in the correct directory:

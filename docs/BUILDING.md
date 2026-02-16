@@ -72,6 +72,7 @@ The package requires:
 - `coreutils`, `sed`, `findutils` - Standard Unix utilities
 
 Optional:
+
 - `python3-nemo` - For the git status column extension
 - `gitk`, `git-gui` - Git graphical tools
 

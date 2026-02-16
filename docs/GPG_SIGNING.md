@@ -5,6 +5,7 @@ This guide explains how to set up GPG signing for nemo-git-integration releases,
 ## Overview
 
 When you create a tagged release (e.g., `v1.0.0`), the CI pipeline will:
+
 1. Build `.deb` packages on Ubuntu 22.04 and 24.04
 2. Sign each package with your GPG key
 3. Create signed SHA256 checksums
@@ -18,11 +19,12 @@ gpg --full-generate-key
 ```
 
 Choose these options:
+
 - **Kind**: RSA and RSA (default)
 - **Key size**: 4096 bits
 - **Validity**: 2 years (or your preference)
 - **Real name**: Your Name
-- **Email**: your-email@example.com (use your GitHub email)
+- **Email**: <your-email@example.com> (use your GitHub email)
 - **Passphrase**: Choose a strong passphrase
 
 ## Step 2: Find Your Key ID
@@ -69,12 +71,14 @@ Add these three secrets:
 Users need your public key to verify signatures.
 
 ### Option A: Upload to a keyserver
+
 ```bash
 gpg --keyserver keyserver.ubuntu.com --send-keys YOUR_KEY_ID
 gpg --keyserver keys.openpgp.org --send-keys YOUR_KEY_ID
 ```
 
 ### Option B: Export and add to your repository
+
 ```bash
 # Export public key
 gpg --armor --export YOUR_KEY_ID > public-key.asc
@@ -83,6 +87,7 @@ gpg --armor --export YOUR_KEY_ID > public-key.asc
 Add this file to your repository root or `docs/` folder.
 
 ### Option C: Add to GitHub profile
+
 Go to GitHub → Settings → SSH and GPG keys → New GPG key, then paste your public key.
 
 ## Step 6: Create a Release
@@ -96,6 +101,7 @@ git push origin v1.0.0
 ```
 
 The CI pipeline will automatically:
+
 1. Run all tests
 2. Build packages for Ubuntu 22.04 and 24.04
 3. Sign packages with your GPG key
@@ -122,6 +128,7 @@ gpg --verify nemo-git-integration_1.0.0_all.deb.asc nemo-git-integration_1.0.0_a
 ```
 
 Expected output:
+
 ```
 gpg: Signature made [date]
 gpg:                using RSA key [KEY_ID]
@@ -141,13 +148,16 @@ sha256sum -c SHA256SUMS
 ## Troubleshooting
 
 ### "gpg: signing failed: No secret key"
+
 - Ensure `GPG_PRIVATE_KEY` secret contains the full private key including headers
 - Verify `GPG_KEY_ID` matches your key
 
 ### "gpg: signing failed: Inappropriate ioctl for device"
+
 - This is handled by the `--pinentry-mode loopback` flag in the workflow
 
 ### Key expired
+
 - Generate a new key or extend your existing key's expiration
 - Update the GitHub secrets with the new key
 
@@ -158,6 +168,7 @@ sha256sum -c SHA256SUMS
 3. **Rotate keys** - Consider rotating keys every 1-2 years
 4. **Backup securely** - Keep an encrypted backup of your private key offline
 5. **Revocation certificate** - Generate and store a revocation certificate:
+
    ```bash
    gpg --gen-revoke YOUR_KEY_ID > revoke.asc
    ```

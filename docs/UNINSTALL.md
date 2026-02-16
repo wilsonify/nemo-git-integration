@@ -15,10 +15,12 @@ This guide provides detailed instructions for completely removing nemo-git-integ
 ## Overview
 
 The nemo-git-integration package can be installed in two ways:
+
 - **System-wide** (via `.deb` package): Files installed to `/usr/share/`, `/etc/xdg/`
 - **User-local** (via `install.sh`): Files installed to `~/.local/`, `~/.config/`
 
 Complete removal requires:
+
 1. Removing installed files
 2. Clearing Nemo caches
 3. Forcing Nemo to reload configuration
@@ -32,6 +34,7 @@ Complete removal requires:
 ```
 
 This will:
+
 - Remove all `.nemo_action` files
 - Remove script directories
 - Remove Python extensions
@@ -86,6 +89,7 @@ After uninstalling, verify complete removal:
 ```
 
 This script checks:
+
 - System-wide locations (`/usr/share/`, `/etc/xdg/`)
 - User-local locations (`~/.local/`, `~/.config/`)
 - Running Nemo processes
@@ -93,11 +97,13 @@ This script checks:
 ### Expected Output
 
 If successful:
+
 ```
 ✓ All nemo-git-integration files successfully removed!
 ```
 
 If files remain:
+
 ```
 ✗ Found N remaining file(s) or directory(ies).
 ```
@@ -111,6 +117,7 @@ If files remain:
 **Solutions** (try in order):
 
 1. **Clear cache and restart Nemo:**
+
    ```bash
    rm -rf ~/.cache/nemo
    nemo -q
@@ -129,6 +136,7 @@ If files remain:
 **Cause**: Trying to remove system files without root privileges.
 
 **Solution**:
+
 ```bash
 sudo ./cleanup-all.sh --system
 ```
@@ -138,6 +146,7 @@ sudo ./cleanup-all.sh --system
 **Cause**: Display environment not available or Nemo already running.
 
 **Solution**:
+
 ```bash
 # Kill all Nemo processes
 killall nemo
@@ -227,6 +236,7 @@ nemo &                  # Restart
 ### Method 3: Log Out and Log Back In
 
 This is the most thorough method:
+
 1. Save all work
 2. Log out of your session
 3. Log back in
@@ -235,6 +245,7 @@ This is the most thorough method:
 ### Method 4: Reboot (Most Thorough)
 
 For complete certainty:
+
 ```bash
 sudo reboot
 ```
@@ -242,6 +253,7 @@ sudo reboot
 ### Method 5: Using Desktop Environment Tools
 
 If using Cinnamon:
+
 1. Open System Settings
 2. Go to "Extensions" or "Nemo Settings"
 3. Disable/Enable or restart Nemo from there
