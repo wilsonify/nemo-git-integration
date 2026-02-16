@@ -87,11 +87,29 @@ clear_nemo_caches() {
 
 # Restart Nemo for all users
 restart_nemo() {
+    # Skip Nemo restart in non-interactive/CI environments
+    # Check for headless environment (no DISPLAY, no TTY, or in chroot)
+    if [ -z "${DISPLAY:-}" ] || [ ! -t 0 ] || [ -n "${DEBIAN_FRONTEND:-}" ]; then
+        log_info "Skipping Nemo restart (non-interactive environment)"
+        return 0
+    fi
+    
+    # Check if any Nemo processes are actually running before trying to signal them
+    if ! pgrep -x nemo >/dev/null 2>&1; then
+        log_info "No Nemo processes running, skipping restart."
+        return 0
+    fi
+    
     log_info "Attempting to restart Nemo..."
     
     # Try to restart Nemo for active sessions
-    if command -v pkill >/dev/null 2>&1; then
-        # Kill all Nemo processes (they will auto-restart or user will restart)
+    # Use pkill with timeout to prevent hanging
+    if command -v timeout >/dev/null 2>&1 && command -v pkill >/dev/null 2>&1; then
+        # Use timeout to prevent the command from hanging
+        timeout 2 pkill -HUP nemo 2>/dev/null || true
+        log_info "Sent HUP signal to Nemo processes."
+    elif command -v pkill >/dev/null 2>&1; then
+        # Fallback without timeout
         pkill -HUP nemo 2>/dev/null || true
         log_info "Sent HUP signal to Nemo processes."
     fi
