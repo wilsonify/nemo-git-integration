@@ -41,6 +41,8 @@ make install    # Copies *.nemo_action files to the ~/.local/share/nemo/actions 
 make uninstall  # Removes installed actions
 ```
 
+For complete uninstallation instructions and troubleshooting, see [UNINSTALL.md](docs/UNINSTALL.md).
+
 See [BUILDING.md](BUILDING.md) for detailed build and packaging instructions.
 
 # Usage
