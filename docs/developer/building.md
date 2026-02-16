@@ -81,7 +81,7 @@ Optional:
 ## Build Commands
 
 | Command | Description |
-|---------|-------------|
+| ------- | ----------- |
 | `make deb` | Build unsigned .deb package |
 | `make deb-signed` | Build signed .deb package |
 | `make deb-install` | Build and install .deb |
@@ -95,7 +95,7 @@ Optional:
 When installed via the `.deb` package, files are placed in:
 
 | Location | Contents |
-|----------|----------|
+| -------- | -------- |
 | `/usr/share/nemo/actions/` | Nemo action files (`.nemo_action`) |
 | `/usr/share/nemo-git-integration/` | Shell scripts for git operations |
 | `/usr/share/nemo-python/extensions/` | Python extension for git status |

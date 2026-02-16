@@ -1,14 +1,14 @@
 # Nemo Git Integration
 
-Integrate Git directly into the Nemo file explorer via context menus. 
+Integrate Git directly into the Nemo file explorer via context menus.
 
-Perform common Git operations without opening a terminal or IDE. 
+Perform common Git operations without opening a terminal or IDE.
 
 Tested primarily on Linux Mint Debian Edition.
 
-![](Screenshot%20from%202025-10-14%2015-15-14.png)
+![right-click menu](Screenshot%20from%202025-10-14%2015-15-14.png)
 
-# Get Started 
+## Get Started
 
 ## Installation
 

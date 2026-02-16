@@ -63,7 +63,7 @@ Go to your repository → **Settings** → **Secrets and variables** → **Actio
 Add these three secrets:
 
 | Secret Name | Value |
-|-------------|-------|
+| ----------- | ----- |
 | `GPG_PRIVATE_KEY` | The entire contents of `private-key.asc` (including BEGIN/END lines) |
 | `GPG_PASSPHRASE` | Your GPG key passphrase |
 | `GPG_KEY_ID` | Your key ID (e.g., `ABCD1234EFGH5678`) |
@@ -131,7 +131,7 @@ gpg --verify nemo-git-integration_1.0.0_all.deb.asc nemo-git-integration_1.0.0_a
 
 Expected output:
 
-```
+```bash
 gpg: Signature made [date]
 gpg:                using RSA key [KEY_ID]
 gpg: Good signature from "Maintainer Name <email>"

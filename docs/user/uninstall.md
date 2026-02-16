@@ -100,13 +100,13 @@ This script checks:
 
 If successful:
 
-```
+```txt
 ✓ All nemo-git-integration files successfully removed!
 ```
 
 If files remain:
 
-```
+```txt
 ✗ Found N remaining file(s) or directory(ies).
 ```
 
@@ -304,7 +304,7 @@ exit $EXIT_CODE
 ### System-Wide Installation Paths
 
 | Type | Location |
-|------|----------|
+| ---- | -------- |
 | Action files | `/usr/share/nemo/actions/*.nemo_action` |
 | Shell scripts | `/usr/share/nemo-git-integration/s0*/*.sh` |
 | Python extension | `/usr/share/nemo-python/extensions/nemo_git_status.py` |
@@ -314,7 +314,7 @@ exit $EXIT_CODE
 ### User-Local Installation Paths
 
 | Type | Location |
-|------|----------|
+| ---- | -------- |
 | Action files | `~/.local/share/nemo/actions/*.nemo_action` |
 | Shell scripts | `~/.local/share/nemo/nemo-git-integration/s0*/*.sh` |
 | Python extension | `~/.local/share/nemo-python/extensions/nemo_git_status.py` |

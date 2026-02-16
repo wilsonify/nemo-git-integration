@@ -26,7 +26,7 @@ This guide is for developers who want to understand, modify, and test the **Nemo
 
 ## 1. Project Structure
 
-```
+```txt
 .
 ├── icons/                 # PNG icons and README for visual enhancements
 ├── nemo/                 # Contains .nemo_action files for context menu integration
@@ -46,7 +46,7 @@ This guide is for developers who want to understand, modify, and test the **Nemo
 
 ## 2. Development Quick Start
 
-```
+```bash
 git clone https://github.com/wilsonify/nemo-git-integration.git
 cd nemo-git-integration
 sudo apt-get install -y git zenity nemo-python bats
@@ -118,7 +118,7 @@ export ZENITY_LOG=~/zenity_debug.log
 
 ### Prevent commit errors by setting a Git identity
 
-```
+```bash
 git config --global user.name "CI Runner"
 git config --global user.email "ci@example.com"
 ```
