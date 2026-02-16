@@ -39,16 +39,16 @@ make install    # Copies *.nemo_action files to the ~/.local/share/nemo/actions 
 make uninstall  # Removes installed actions
 ```
 
-For complete uninstallation instructions and troubleshooting, see [UNINSTALL.md](docs/UNINSTALL.md).
+For complete uninstallation instructions and troubleshooting, see [UNINSTALL](docs/user/uninstall.md).
 
-See [BUILDING.md](BUILDING.md) for detailed build and packaging instructions.
+See [BUILDING](docs/developer/building.md) for detailed build and packaging instructions.
 
 Usage
 -----------------
 
 Each action is accessed by right-clicking files or folders in Nemo.
 
-[User Documentation](https://wilsonify.github.io/nemo-git-integration/01user.html)
+[User Documentation](https://wilsonify.github.io/nemo-git-integration/user.html)
 
 Single Repo
 ![a single repo](docs/Screenshot%20from%202025-10-14%2015-15-14.png)
@@ -59,9 +59,9 @@ Multi-Repo
 How to Contribute
 -----------------
 
-[Developer Documentation](https://wilsonify.github.io/nemo-git-integration/02developer.html)
+[Developer Documentation](https://wilsonify.github.io/nemo-git-integration/developer.html)
 
 Managing the extension
 -----------------
 
-[Admin Documentation](https://wilsonify.github.io/nemo-git-integration/03admin.html)
+[Admin Documentation](https://wilsonify.github.io/nemo-git-integration/admin.html)

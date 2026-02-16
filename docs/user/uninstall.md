@@ -2,6 +2,8 @@
 
 This guide provides detailed instructions for completely removing nemo-git-integration from your system.
 
+← [Back to User Guide](../user.md)
+
 ## Table of Contents
 
 1. [Overview](#overview)

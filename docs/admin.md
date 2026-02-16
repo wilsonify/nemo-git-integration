@@ -45,7 +45,7 @@ In Nemo, enable or disable extension via:
 
 You should see **Nemo Git Integration** (or `nemo-git-status`) in the extension list.
 
-![](docs/img2.png)
+![](img2.png)
 
 Enable the extension in Nemo:
 
@@ -61,7 +61,12 @@ nemo -q
 nemo &
 ```
 
-Configuration
+## More Resources
+
+- [Building & Installation](developer/building.md) - Full build and packaging instructions
+- [User Guide](user.md) - End-user installation and usage
+
+## Configuration
 
 Git User Identity
 
@@ -93,7 +98,7 @@ Zenity logs can be captured for debugging:
 
 export ZENITY_LOG=~/zenity_debug.log
 
-Advanced CI Setup
+## Advanced CI Setup
 
 For automated testing in GitHub Actions:
 

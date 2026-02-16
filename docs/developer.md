@@ -15,6 +15,13 @@ This guide is for developers who want to understand, modify, and test the **Nemo
 1. Commit and push your branch.
 1. Submit a Pull Request to the main repository.
 
+## More Resources
+
+- [Building & Installation](developer/building.md)
+- [GPG Signing](developer/gpg-signing.md)
+- [Maintainer Validation](developer/maintainer-validation.md)
+- [Public Key](developer/public-key.asc)
+
 ---
 
 ## 1. Project Structure

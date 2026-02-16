@@ -2,6 +2,8 @@
 
 This document provides step-by-step validation procedures for maintainers to confirm the uninstall cleanup improvements work correctly.
 
+← [Back to Developer Guide](../developer.md)
+
 ## Summary of Changes
 
 ### Files Modified

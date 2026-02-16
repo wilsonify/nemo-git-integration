@@ -2,6 +2,8 @@
 
 This guide explains how to set up GPG signing for nemo-git-integration releases, allowing users to verify that builds are authentically from you.
 
+← [Back to Developer Guide](../developer.md)
+
 ## Overview
 
 When you create a tagged release (e.g., `v1.0.0`), the CI pipeline will:

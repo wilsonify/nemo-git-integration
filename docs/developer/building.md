@@ -2,6 +2,8 @@
 
 This document explains how to build and install the Nemo Git Integration package.
 
+← [Back to Developer Guide](../developer.md)
+
 ## Quick Install (Debian/Ubuntu)
 
 ### From Release (Recommended)
