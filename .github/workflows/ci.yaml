@@ -166,6 +166,5 @@ jobs:
               --default-key "$GPG_KEY_ID" \
               --clearsign SHA256SUMS
           mv SHA256SUMS.asc SHA256SUMS.gpg
-          generate_release_notes: true
 
-          
+
