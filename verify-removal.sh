@@ -14,7 +14,7 @@
 #   1 - Some files still remain
 #
 
-set -euo pipefail
+set -uo pipefail
 
 # Color codes for output
 RED='\033[0;31m'
