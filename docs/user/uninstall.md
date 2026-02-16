@@ -65,19 +65,19 @@ If the standard uninstall leaves residual files, use the comprehensive cleanup s
 ### Clean User-Local Installation Only
 
 ```bash
-./cleanup-all.sh
+./uninstall.sh
 ```
 
 ### Clean System-Wide Installation Only
 
 ```bash
-sudo ./cleanup-all.sh --system
+sudo ./uninstall.sh --system
 ```
 
 ### Clean Both User-Local and System-Wide
 
 ```bash
-./cleanup-all.sh --all
+./uninstall.sh --all
 ```
 
 Note: This requires `sudo` for system-wide cleanup.
@@ -87,7 +87,7 @@ Note: This requires `sudo` for system-wide cleanup.
 After uninstalling, verify complete removal:
 
 ```bash
-./verify-removal.sh
+./uninstall.sh --verify
 ```
 
 This script checks:
@@ -140,7 +140,7 @@ If files remain:
 **Solution**:
 
 ```bash
-sudo ./cleanup-all.sh --system
+sudo ./uninstall.sh --all --system
 ```
 
 ### Nemo Won't Restart
@@ -264,7 +264,7 @@ If using Cinnamon:
 
 Use this checklist to confirm complete removal:
 
-- [ ] Run `./verify-removal.sh` - all checks pass
+- [ ] Run `./uninstall.sh --verify` - all checks pass
 - [ ] Right-click a folder in Nemo - no Git menu items appear
 - [ ] Check `~/.local/share/nemo/actions/` - no `git*.nemo_action` files
 - [ ] Check `/usr/share/nemo/actions/` - no `git*.nemo_action` files
@@ -292,7 +292,7 @@ test -f ~/.local/share/nemo/actions/git01a-init.nemo_action
 ./uninstall.sh
 
 # Verify removal
-./verify-removal.sh
+./uninstall.sh --verify
 EXIT_CODE=$?
 
 # Exit with verification result
@@ -327,7 +327,7 @@ exit $EXIT_CODE
 If you continue to experience issues after following this guide:
 
 1. Check the [GitHub Issues](https://github.com/wilsonify/nemo-git-integration/issues)
-2. Run `./verify-removal.sh` and include output in your issue report
+2. Run `./uninstall.sh --verify` and include output in your issue report
 3. Provide Nemo version: `nemo --version`
 4. Provide OS information: `lsb_release -a`
 
@@ -335,6 +335,4 @@ If you continue to experience issues after following this guide:
 
 - [README.md](../README.md) - Installation and usage
 - [debian/postrm](../debian/postrm) - Debian package removal script
-- [uninstall.sh](../uninstall.sh) - User-local uninstall script
-- [cleanup-all.sh](../cleanup-all.sh) - Comprehensive cleanup script
-- [verify-removal.sh](../verify-removal.sh) - Verification script
+- [uninstall.sh](../uninstall.sh) - Uninstall script (supports --system, --all, --verify flags)

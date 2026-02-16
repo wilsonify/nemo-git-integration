@@ -9,16 +9,16 @@ This document provides step-by-step validation procedures for maintainers to con
 ### Files Modified
 
 1. **`debian/postrm`** - Complete rewrite with proper cleanup logic
-2. **`uninstall.sh`** - Improved to be selective and comprehensive
-3. **`tests/test_uninstall.sh`** - Enhanced test coverage
+2. **`uninstall.sh`** - Consolidated script with user-local, system-wide, and verification modes
+3. **`tests/test_uninstall.sh`** - Enhanced test coverage including all modes
 
-### Files Added
+### Consolidation
 
-1. **`verify-removal.sh`** - Verification script to check complete removal
-2. **`cleanup-all.sh`** - Comprehensive cleanup for both user and system installations
-3. **`docs/UNINSTALL.md`** - Complete uninstallation guide
-4. **`tests/test_verify_removal.sh`** - Tests for verification script
-5. **`tests/test_cleanup_all.sh`** - Tests for cleanup script
+The functionality of three separate scripts has been consolidated into a single `uninstall.sh`:
+- Default behavior: User-local uninstall
+- `--system` flag: System-wide cleanup
+- `--all` flag: Both user-local and system-wide
+- `--verify` flag: Verification of complete removal
 
 ## Quick Validation
 
@@ -29,10 +29,10 @@ Run all tests to ensure everything works:
 sudo apt-get install -y bats
 
 # Run all uninstall-related tests
-bats tests/test_uninstall.sh tests/test_verify_removal.sh tests/test_cleanup_all.sh
+bats tests/test_uninstall.sh
 ```
 
-Expected result: All 23 tests should pass.
+Expected result: All 19 tests should pass.
 
 ## Detailed Validation Procedures
 
@@ -56,7 +56,7 @@ ls ~/.config/nemo/actions/actions-tree.json
 ./uninstall.sh
 
 # 4. Verify complete removal
-./verify-removal.sh
+./uninstall.sh --verify
 ```
 
 **Expected Result**:
@@ -89,7 +89,7 @@ ls /etc/xdg/nemo/actions/actions-tree.json
 sudo dpkg --purge nemo-git-integration
 
 # 5. Verify complete removal
-sudo ./verify-removal.sh
+sudo ./uninstall.sh --verify
 ```
 
 **Expected Result**:
@@ -108,10 +108,10 @@ sudo ./verify-removal.sh
 ./install.sh
 
 # 2. Run cleanup
-./cleanup-all.sh
+./uninstall.sh --all
 
 # 3. Verify removal
-./verify-removal.sh
+./uninstall.sh --verify
 ```
 
 **Expected Result**:
@@ -131,12 +131,12 @@ sudo ./verify-removal.sh
 ./uninstall.sh
 
 # Run cleanup multiple times
-./cleanup-all.sh
-./cleanup-all.sh
-./cleanup-all.sh
+./uninstall.sh --all
+./uninstall.sh --all
+./uninstall.sh --all
 
 # Verify no errors and clean state
-./verify-removal.sh
+./uninstall.sh --verify
 ```
 
 **Expected Result**:
@@ -213,7 +213,7 @@ rm ~/.local/share/nemo/actions/my-custom-action.nemo_action
 
 ### Test 7: System-Wide Cleanup (Requires Root)
 
-**Purpose**: Verify cleanup-all.sh can clean system-wide installation.
+**Purpose**: Verify uninstall.sh can clean system-wide installation.
 
 **Steps**:
 
@@ -222,10 +222,10 @@ rm ~/.local/share/nemo/actions/my-custom-action.nemo_action
 sudo dpkg -i ../nemo-git-integration_*.deb
 
 # 2. Use cleanup script with --system flag
-sudo ./cleanup-all.sh --system
+sudo ./uninstall.sh --all --system
 
 # 3. Verify removal
-sudo ./verify-removal.sh
+sudo ./uninstall.sh --verify
 ```
 
 **Expected Result**:
@@ -266,8 +266,8 @@ Verify scripts execute in reasonable time:
 # Each should complete in under 5 seconds
 time ./install.sh
 time ./uninstall.sh
-time ./cleanup-all.sh
-time ./verify-removal.sh
+time ./uninstall.sh --all
+time ./uninstall.sh --verify
 ```
 
 ## Edge Cases to Test
@@ -307,13 +307,13 @@ sudo mkdir -p /usr/share/nemo/actions
 sudo touch /usr/share/nemo/actions/git01a-init.nemo_action
 
 # Run user cleanup
-./cleanup-all.sh
+./uninstall.sh --all
 
 # Verify user files removed but system file remains
-./verify-removal.sh  # Should detect system file
+./uninstall.sh --verify  # Should detect system file
 
 # Cleanup system file
-sudo ./cleanup-all.sh --system
+sudo ./uninstall.sh --all --system
 ```
 
 ## Documentation Validation
@@ -329,7 +329,7 @@ Verify documentation is accurate and helpful:
 
 Mark each item as complete:
 
-- [ ] All 23 automated tests pass
+- [ ] All 19 automated tests pass
 - [ ] User-local install/uninstall cycle works
 - [ ] System-wide install/purge works
 - [ ] Cleanup script removes all files
@@ -360,7 +360,7 @@ If validation fails:
 2. **Verify dependencies**: Ensure `jq`, `zenity`, `git` are installed
 3. **Check permissions**: Some operations require write access to test directories
 4. **Review logs**: Scripts output `[INFO]` and `[ERROR]` messages
-5. **Manual inspection**: Use `ls -la` to check directories mentioned in verify-removal.sh
+5. **Manual inspection**: Use `ls -la` to check directories mentioned in uninstall.sh
 
 ## Reporting Issues
 
@@ -375,6 +375,4 @@ If you find issues during validation:
 
 - [UNINSTALL.md](UNINSTALL.md) - User-facing uninstall guide
 - [debian/postrm](../debian/postrm) - Package removal script
-- [uninstall.sh](../uninstall.sh) - User uninstall script
-- [cleanup-all.sh](../cleanup-all.sh) - Comprehensive cleanup script
-- [verify-removal.sh](../verify-removal.sh) - Verification script
+- [uninstall.sh](../uninstall.sh) - Consolidated uninstall script (supports --system, --all, --verify flags)
