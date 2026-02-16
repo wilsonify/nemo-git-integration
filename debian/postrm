@@ -10,6 +10,13 @@ log_info() {
     echo "[nemo-git-integration] $*"
 }
 
+# Update icon cache
+update_icon_cache() {
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
+    fi
+}
+
 # Remove system-wide files installed by this package
 remove_system_files() {
     log_info "Removing system-wide nemo-git-integration files..."
@@ -87,9 +94,7 @@ restart_nemo() {
 case "$1" in
     remove)
         # On remove, just update icon cache
-        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
-            gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
-        fi
+        update_icon_cache
         restart_nemo
         ;;
         
@@ -97,12 +102,7 @@ case "$1" in
         # On purge, do complete cleanup
         remove_system_files
         clear_nemo_caches
-        
-        # Update icon cache
-        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
-            gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
-        fi
-        
+        update_icon_cache
         restart_nemo
         log_info "Purge complete. Nemo should reload on next start."
         ;;

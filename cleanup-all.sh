@@ -252,7 +252,9 @@ main() {
             # Try to restart Nemo for the user who invoked sudo
             if [ -n "${SUDO_USER:-}" ]; then
                 log_info "Attempting to restart Nemo for user: $SUDO_USER"
-                su - "$SUDO_USER" -c "nemo -q 2>/dev/null || true; sleep 2; DISPLAY=:0 nohup nemo >/dev/null 2>&1 &" || true
+                # Preserve the user's DISPLAY environment variable
+                SUDO_USER_DISPLAY=$(su - "$SUDO_USER" -c 'echo $DISPLAY' 2>/dev/null || echo ":0")
+                su - "$SUDO_USER" -c "nemo -q 2>/dev/null || true; sleep 2; DISPLAY=${SUDO_USER_DISPLAY} nohup nemo >/dev/null 2>&1 &" || true
             fi
             ;;
         all)
