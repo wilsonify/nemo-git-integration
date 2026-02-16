@@ -1,12 +1,143 @@
 #!/bin/sh
 set -e
 
-case "$1" in
-    purge|remove)
-        # Update icon cache if available
-        if command -v update-icon-caches >/dev/null 2>&1; then
-            update-icon-caches /usr/share/icons/hicolor || true
+# postrm script for nemo-git-integration
+#
+# This script handles cleanup after package removal.
+# It removes installed files, clears caches, and forces Nemo to reload.
+
+log_info() {
+    echo "[nemo-git-integration] $*"
+}
+
+# Update icon cache
+update_icon_cache() {
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
+    fi
+}
+
+# Remove system-wide files installed by this package
+remove_system_files() {
+    log_info "Removing system-wide nemo-git-integration files..."
+    
+    # Remove .nemo_action files
+    if [ -d "/usr/share/nemo/actions" ]; then
+        for action in git01a-init.nemo_action git01b-clone.nemo_action git01c-branch.nemo_action \
+                      git02a-status.nemo_action git02c-log.nemo_action git02d-fetch.nemo_action \
+                      git03a-pull.nemo_action git03b-add.nemo_action git03c-commit.nemo_action \
+                      git03d-push.nemo_action git04a-reset.nemo_action git04b-uninit.nemo_action \
+                      git04c-unclone.nemo_action git04e-unpull.nemo_action git04f-unadd.nemo_action \
+                      git04g-uncommit.nemo_action git04h-unpush.nemo_action; do
+            rm -f "/usr/share/nemo/actions/$action"
+        done
+    fi
+    
+    # Remove shell script directory
+    rm -rf /usr/share/nemo-git-integration
+    
+    # Remove Python extension
+    rm -f /usr/share/nemo-python/extensions/nemo_git_status.py
+    rm -rf /usr/share/nemo-python/extensions/__pycache__
+    
+    # Remove configuration file
+    rm -f /etc/xdg/nemo/actions/actions-tree.json
+    
+    # Remove icon files installed by this package
+    if [ -d "/usr/share/icons/hicolor/scalable/apps" ]; then
+        for icon in add-file.png construction.png create.png happy-file.png \
+                    important-file.png winking-file.png; do
+            rm -f "/usr/share/icons/hicolor/scalable/apps/$icon"
+        done
+    fi
+    
+    log_info "System-wide files removed."
+}
+
+# Clear Nemo cache for all users
+clear_nemo_caches() {
+    log_info "Clearing Nemo caches..."
+    
+    # Clear system-wide compiled schemas if they exist
+    if [ -d "/usr/share/glib-2.0/schemas" ]; then
+        if command -v glib-compile-schemas >/dev/null 2>&1; then
+            glib-compile-schemas /usr/share/glib-2.0/schemas || true
         fi
+    fi
+    
+    # Try to clear caches for logged-in users
+    # This is a best-effort approach; user caches are primarily their responsibility
+    if command -v who >/dev/null 2>&1; then
+        who | awk '{print $1}' | sort -u | while read -r user; do
+            # Validate username: only allow alphanumeric, underscore, hyphen
+            if ! echo "$user" | grep -qE '^[a-zA-Z0-9_-]+$'; then
+                log_info "Skipping invalid username: $user"
+                continue
+            fi
+            
+            user_home=$(getent passwd "$user" 2>/dev/null | cut -d: -f6)
+            if [ -n "$user_home" ] && [ -d "$user_home" ]; then
+                # Clear user's Nemo cache
+                rm -rf "$user_home/.cache/nemo" 2>/dev/null || true
+                log_info "Cleared Nemo cache for user: $user"
+            fi
+        done
+    fi
+}
+
+# Restart Nemo for all users
+restart_nemo() {
+    # Skip Nemo restart in non-interactive/CI environments
+    # Check for headless environment (no DISPLAY, no TTY, or in chroot)
+    if [ -z "${DISPLAY:-}" ] || [ ! -t 0 ] || [ -n "${DEBIAN_FRONTEND:-}" ]; then
+        log_info "Skipping Nemo restart (non-interactive environment)"
+        return 0
+    fi
+    
+    # Check if any Nemo processes are actually running before trying to signal them
+    if ! pgrep -x nemo >/dev/null 2>&1; then
+        log_info "No Nemo processes running, skipping restart."
+        return 0
+    fi
+    
+    log_info "Attempting to restart Nemo..."
+    
+    # Try to restart Nemo for active sessions
+    # Use pkill with timeout to prevent hanging
+    if command -v timeout >/dev/null 2>&1 && command -v pkill >/dev/null 2>&1; then
+        # Use timeout to prevent the command from hanging
+        timeout 2 pkill -HUP nemo 2>/dev/null || true
+        log_info "Sent HUP signal to Nemo processes."
+    elif command -v pkill >/dev/null 2>&1; then
+        # Fallback without timeout
+        pkill -HUP nemo 2>/dev/null || true
+        log_info "Sent HUP signal to Nemo processes."
+    fi
+}
+
+case "$1" in
+    remove)
+        # On remove, just update icon cache
+        update_icon_cache
+        restart_nemo
+        ;;
+        
+    purge)
+        # On purge, do complete cleanup
+        remove_system_files
+        clear_nemo_caches
+        update_icon_cache
+        restart_nemo
+        log_info "Purge complete. Nemo should reload on next start."
+        ;;
+        
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # No action needed for these cases
+        ;;
+        
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
         ;;
 esac
 

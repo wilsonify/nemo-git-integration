@@ -5,7 +5,7 @@ It assumes you have **Nemo** (the Cinnamon file manager) installed.
 
 ---
 
-![Screenshot from 2025-10-30 09-26-24.png](Screenshot%20from%202025-10-30%2009-26-24.png)
+![Screenshot from 2025-10-30 09-26-24.png](../Screenshot%20from%202025-10-30%2009-26-24.png)
 
 ---
 
@@ -47,4 +47,8 @@ All Git actions are accessed via **right-click** on files or folders in Nemo.
 - Zenity dialogs are used for confirmations and errors.  
 - Columns show Git status in the Nemo list view.  
 
-For installation, system setup, or modifying the scripts, refer to the [Developer Guide](developer.md) and [Administrator Guide](admin.md).
+## More Resources
+
+- [Uninstall Guide](user/uninstall.md) - Complete uninstallation instructions
+- [Developer Guide](developer.md) - For modifying the scripts
+- [Administrator Guide](admin.md) - For system setup and configuration

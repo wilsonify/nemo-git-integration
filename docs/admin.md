@@ -1,5 +1,4 @@
-Administrator Guide
-=====
+# Administrator Guide
 
 This guide covers administrative tasks, system setup, and configuration for **Nemo Git Integration**.
 
@@ -15,7 +14,7 @@ This guide covers administrative tasks, system setup, and configuration for **Ne
   - `zenity` – provides graphical dialogs
   - `nemo-python` – provides Nemo Python extension support
 
-# Install dependencies
+## Install dependencies
 
 ```bash
 sudo apt-get update
@@ -23,16 +22,16 @@ sudo apt-get install -y git zenity nemo-python
 make install
 ```
 
-# Updates
+## Updates
 
 Use the provided Makefile for re-installation and updates:
 
-```
+```bash
 make uninstall   # Removes installed actions
 make install     # Copies *.nemo_action files and scripts to correct locations
 ```
 
-# Verify Installation
+## Verify Installation
 
 Ensure the following directories and files exist:
 
@@ -41,42 +40,46 @@ ls ~/.local/share/nemo-python/extensions/
 
 In Nemo, enable or disable extension via:  
 
-**Edit → Plugins**
+Edit → Plugins
 
 You should see **Nemo Git Integration** (or `nemo-git-status`) in the extension list.
 
-![](docs/img2.png)
+![extension enabled](img2.png)
 
 Enable the extension in Nemo:
 
-    Open Nemo → Edit → Plugins
+Open Nemo → Edit → Plugins
 
-    Enable Nemo Git Integration
-    
-    
+Enable Nemo Git Integration
+
 Restart Nemo
 
-```
+```bash
 nemo -q
 nemo &
 ```
 
-Configuration
+## More Resources
+
+- [Building & Installation](developer/building.md) - Full build and packaging instructions
+- [User Guide](user.md) - End-user installation and usage
+
+## Configuration
 
 Git User Identity
 
-Many scripts perform Git commits; 
+Many scripts perform Git commits;
 
 ensure Git is configured in the CI/user environment:
 
-```
+```bash
 git config --global user.name "Name"
 git config --global user.email "name@example.com"
 ```
 
 For per-repo configuration:
 
-```
+```bash
 cd /path/to/repo
 git config user.name "Repo Admin"
 git config user.email "repo@example.com"
@@ -93,21 +96,20 @@ Zenity logs can be captured for debugging:
 
 export ZENITY_LOG=~/zenity_debug.log
 
-Advanced CI Setup
+## Advanced CI Setup
 
 For automated testing in GitHub Actions:
 
 Configure Git user in the workflow:
 
-# Troubleshooting
+## Troubleshooting
 
-| Issue                                                                                    | Resolution                                                                             |
-|------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
-| Scripts not visible in Nemo	                                                             | Verify nemo-python installed and files exist in ~/.local/share/nemo-python/extensions/ |
-| Git commands fail in scripts	                                                           | Check Git user identity (git config) and permissions                                   | 
-| Zenity dialogs fail	                                                                     | Ensure zenity is installed and executable in $PATH                                     |
-| CI tests fail	 | Make sure the CI runner sets Git user/email and HOME environment correctly |
-
+| Issue | Resolution
+| ----- | ----------
+| Scripts not visible in Nemo | Verify nemo-python installed and files exist in ~/.local/share/nemo-python/extensions/
+| Git commands fail in scripts | Check Git user identity (git config) and permissions
+| Zenity dialogs fail | Ensure zenity is installed and executable in $PATH
+| CI tests fail | Make sure the CI runner sets Git user/email and HOME environment correctly
 
 - **scripts not visible**:  
   Ensure `nemo-python` is installed and the scripts files exist in the correct directory:
