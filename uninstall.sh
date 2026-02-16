@@ -241,6 +241,12 @@ remove_system_wide() {
 
 # Restart Nemo
 restart_nemo() {
+    # Skip Nemo restart in non-interactive/CI environments
+    if [ -z "${DISPLAY:-}" ] || [ ! -t 0 ] || [ -n "${DEBIAN_FRONTEND:-}" ]; then
+        log_info "Skipping Nemo restart (non-interactive environment)"
+        return 0
+    fi
+    
     log_info "Restarting Nemo..."
     
     # Quit Nemo
