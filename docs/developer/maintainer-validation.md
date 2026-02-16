@@ -15,6 +15,7 @@ This document provides step-by-step validation procedures for maintainers to con
 ### Consolidation
 
 The functionality of three separate scripts has been consolidated into a single `uninstall.sh`:
+
 - Default behavior: User-local uninstall
 - `--system` flag: System-wide cleanup
 - `--all` flag: Both user-local and system-wide
